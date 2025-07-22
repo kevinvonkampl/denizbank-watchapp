@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  watchapp-service:
+    build:
+      context: ..
+
+      dockerfile: src/Dockerfile
+    container_name: watchapp_api
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    env_file:
+      - ./src/main/resources/.env
+
+  postgres-db:
+    image: postgres:15
+    container_name: watchapp_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${AIVEN_DB_USERNAME}
+      POSTGRES_PASSWORD: ${AIVEN_DB_PASSWORD}
+      POSTGRES_DB: ${AIVEN_DB_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${AIVEN_DB_USERNAME} -d ${AIVEN_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pg_data:
