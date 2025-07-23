@@ -1,3 +1,4 @@
+// Dosya Yolu: src/main/java/watchapp/mapper/TransactionMapper.java
 package watchapp.mapper;
 
 import org.mapstruct.*;
@@ -9,9 +10,10 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface TransactionMapper {
 
-    // ObpApiClient.Transaction nesnesini TransactionDTO'ya çevirir.
-    TransactionDTO toDto(ObpApiClient.Transaction transaction);
+    // ObpApiClient.ObpTransaction nesnesini TransactionDTO'ya çevirir.
+    // 'ObpTransaction' olarak tam adını kullanıyoruz.
+    TransactionDTO toDto(ObpApiClient.ObpTransaction transaction);
 
     // Otomatik olarak bir listeyi de çevirebilir.
-    List<TransactionDTO> toDtoList(List<ObpApiClient.Transaction> transactions);
+    List<TransactionDTO> toDtoList(List<ObpApiClient.ObpTransaction> transactions);
 }
