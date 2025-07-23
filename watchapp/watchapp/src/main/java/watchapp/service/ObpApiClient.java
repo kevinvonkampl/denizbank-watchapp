@@ -30,22 +30,22 @@ public class ObpApiClient {
     // OBP'den Gelen Cevapları Temsil Eden DTO'lar (İç İçe Sınıflar)
     // ===================================================================
 
-    private record ObpAccountList(List<ObpAccount> accounts) {}
+    // Hesap ve Bakiye DTO'ları
     public record ObpAccount(String id, String label, String iban, @JsonProperty("bank_id") String bankId, ObpBalance balance) {}
     public record ObpBalance(String currency, String amount) {}
+    private record ObpAccountList(List<ObpAccount> accounts) {}
 
-    private record ObpTransactionList(List<ObpTransaction> transactions) {}
+    // İşlem (Transaction) DTO'ları
     public record ObpTransaction(String id, @JsonProperty("details") ObpTransactionDetails details) {}
     public record ObpTransactionDetails(String type, String description, @JsonProperty("completed") String completedDate, @JsonProperty("value") ObpTransactionValue value) {}
-
-    // DÜZELTME: İsim çakışmasını önlemek için 'Value' yerine 'ObpTransactionValue' adını kullandık.
     public record ObpTransactionValue(String currency, String amount) {}
+    private record ObpTransactionList(List<ObpTransaction> transactions) {}
 
+    // Token DTO'su
     private record ObpToken(String token) {}
 
-    // DÜZELTME: Para transferi için gerekli Body DTO'ları
-    private record TransactionRequestBody(TransactionTo to, ObpTransactionValue value, String description) {}
-    private record TransactionTo(String bank_id, String account_id) {}
+    // Birden fazla API çağrısının sonucunu birleştirmek için yardımcı DTO
+    public record AccountDataPackage(ObpAccount account, List<ObpTransaction> transactions) {}
 
 
     // ===================================================================
@@ -67,6 +67,7 @@ public class ObpApiClient {
     }
 
     public Mono<ObpAccount> getPrimaryAccount(String authToken) {
+        // Auth header'ı artık "DirectLogin token" değil, doğrudan "DirectLogin token=..." olmalı.
         String authHeader = String.format("DirectLogin token=\"%s\"", authToken);
 
         return this.webClient.get()
@@ -79,7 +80,7 @@ public class ObpApiClient {
                     if (accountList.accounts() == null || accountList.accounts().isEmpty()) {
                         throw new RuntimeException("Kullanıcıya ait OBP hesabı bulunamadı.");
                     }
-                    return accountList.accounts().get(0); // Listenin ilk hesabını al
+                    return accountList.accounts().get(0);
                 });
     }
 
@@ -98,12 +99,13 @@ public class ObpApiClient {
                 .map(ObpTransactionList::transactions);
     }
 
-    public Mono<AccountService.AccountDataPackage> getAccountDataPackage(String authToken) {
+    public Mono<AccountDataPackage> getAccountDataPackage(String authToken) {
         return getPrimaryAccount(authToken)
                 .flatMap(account -> {
                     Mono<List<ObpTransaction>> transactionsMono = getRecentTransactions(authToken, account.bankId(), account.id(), 3);
+                    // Düzeltme: Burada new AccountDataPackage(...) demeliyiz, AccountService'e referans vermeden.
                     return Mono.zip(Mono.just(account), transactionsMono)
-                            .map(tuple -> new AccountService.AccountDataPackage(tuple.getT1(), tuple.getT2()));
+                            .map(tuple -> new AccountDataPackage(tuple.getT1(), tuple.getT2()));
                 });
     }
 
