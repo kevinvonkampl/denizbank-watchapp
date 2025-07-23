@@ -1,6 +1,7 @@
 package watchapp.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import watchapp.dto.SavedIbanDTO;
 import watchapp.entity.SavedIban;
 import watchapp.repository.SavedIbanRepository;
@@ -41,11 +42,18 @@ public class IbanService {
         return newIbanDto;
     }
 
-    public void deleteIban(Long ibanId) {
-        // IBAN'ın var olup olmadığını kontrol et
-        if (!ibanRepository.existsById(ibanId)) {
-            throw new RuntimeException("Silinecek IBAN bulunamadı: " + ibanId);
+    @Transactional
+    public void deleteIban(Long userId, Long ibanId) {
+        // Önce silinmek istenen IBAN'ı bul.
+        SavedIban ibanToDelete = ibanRepository.findById(ibanId)
+                .orElseThrow(() -> new RuntimeException("Silinecek IBAN bulunamadı: " + ibanId));
+
+        // Bu IBAN'ın, isteği yapan kullanıcıya ait olup olmadığını kontrol et.
+        // Bu, başkasının IBAN'ını silmesini engeller.
+        if (!ibanToDelete.getUserId().equals(userId)) {
+            throw new SecurityException("Bu IBAN'ı silme yetkiniz yok.");
         }
-        ibanRepository.deleteById(ibanId);
+
+        ibanRepository.delete(ibanToDelete);
     }
 }
