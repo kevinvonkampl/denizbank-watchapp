@@ -1,11 +1,10 @@
+// Dosya Yolu: watchapp/service/AccountService.java
 package watchapp.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import watchapp.dto.AccountDTO;
 import watchapp.dto.TransactionDTO;
-
-// Gerekli olan iç sınıfları ObpApiClient'ten import ediyoruz.
 import watchapp.service.ObpApiClient.AccountDataPackage;
 import watchapp.service.ObpApiClient.ObpAccount;
 import watchapp.service.ObpApiClient.ObpTransaction;
@@ -18,7 +17,7 @@ public class AccountService {
 
     private final ObpApiClient obpApiClient;
 
-    // Sabit OBP token'ını application.yml dosyasından alıyoruz.
+    // Sabit OBP token'ını application.yml dosyasından enjekte ediyoruz.
     @Value("${demo.user.obp-auth-token}")
     private String obpAuthToken;
 
@@ -27,47 +26,41 @@ public class AccountService {
     }
 
     /**
-     * Demo kullanıcısının OBP token'ını kullanarak hesap detaylarını (bakiye, IBAN)
+     * Demo kullanıcısının sabit OBP token'ını kullanarak hesap detaylarını
      * ve son üç işlemi getiren metot.
-     * @param userId Simülasyon gereği alınan ancak aktif olarak kullanılmayan kullanıcı ID'si. Loglama için kullanılabilir.
+     * @param userId Loglama gibi amaçlar için alınır, OBP çağrısında doğrudan kullanılmaz.
      * @return Hesap bilgilerini içeren bir AccountDTO nesnesi.
      */
     public AccountDTO getAccountDetails(Long userId) {
-        // Bu metot artık userId'yi veritabanı sorgusu için kullanmıyor,
-        // ama loglama veya gelecekteki bir özellik için parametre olarak tutulabilir.
-        System.out.println("Hesap detayları getiriliyor. Kullanıcı ID (simüle edilen): " + userId);
+        System.out.println("Hesap detayları getiriliyor. Sabit Kullanıcı ID: " + userId);
 
         // Token'ın application.yml'de ayarlanıp ayarlanmadığını kontrol et.
-        if (obpAuthToken == null || obpAuthToken.isBlank() || obpAuthToken.equals("buraya_sizin_uzun_sureli_obp_tokeniniz_gelecek")) {
-            throw new IllegalStateException("Geçerli bir OBP token'ı 'application.yml' dosyasında tanımlanmamış. Lütfen 'demo.user.obp-auth-token' alanını güncelleyin.");
+        if (obpAuthToken == null || obpAuthToken.isBlank() || obpAuthToken.equals("${OBP_STATIC_TOKEN}")) {
+            throw new IllegalStateException("Geçerli bir OBP token'ı 'application.yml' dosyasında 'demo.user.obp-auth-token' olarak tanımlanmamış veya ortam değişkeni bulunamamıştır.");
         }
 
         // ObpApiClient üzerinden hem hesap bilgisini hem de transaction'ları tek çağrıda getir.
-        // .block() metodu, asenkron işlemin tamamlanmasını bekler ve sonucunu döndürür.
+        // Artık veritabanından token okumaya gerek yok, doğrudan enjekte edilen token'ı kullanıyoruz.
         AccountDataPackage dataPackage = obpApiClient.getAccountDataPackage(obpAuthToken).block();
 
-        // API'den cevap gelmeme durumunu kontrol et.
         if (dataPackage == null) {
             throw new RuntimeException("OBP'den hesap verileri alınamadı. Token geçersiz veya API ulaşılamıyor olabilir.");
         }
 
-        // Gelen paket içerisinden hesap ve işlem bilgilerini çıkar.
         ObpAccount obpAccount = dataPackage.account();
         List<ObpTransaction> obpTransactions = dataPackage.transactions();
 
-        // OBP'den gelen işlem listesini, bizim saat uygulamamızın anlayacağı DTO formatına dönüştür.
         List<TransactionDTO> transactionDTOs = obpTransactions.stream()
                 .map(tx -> new TransactionDTO(
                         tx.details().description(),
-                        Double.parseDouble(tx.details().value().amount()), // OBP'den gelen para miktarı String olabilir, Double'a çevir.
+                        Double.parseDouble(tx.details().value().amount()),
                         tx.details().completedDate()
                 ))
                 .collect(Collectors.toList());
 
-        // Son olarak, tüm bu bilgileri birleştirerek ana DTO'muzu oluştur ve döndür.
         return new AccountDTO(
                 obpAccount.iban(),
-                Double.parseDouble(obpAccount.balance().amount()), // Bakiye de String olabilir, Double'a çevir.
+                Double.parseDouble(obpAccount.balance().amount()),
                 transactionDTOs
         );
     }

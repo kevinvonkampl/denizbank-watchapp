@@ -1,3 +1,4 @@
+// Dosya Yolu: watchapp/controller/WalletController.java
 package watchapp.controller;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +11,7 @@ import watchapp.service.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1") // {userId} path'ten kaldırıldı.
+@RequestMapping("/api/v1") // Sınıf seviyesinde ana yolu belirliyoruz, daha temiz.
 public class WalletController {
 
     private final AccountService accountService;
@@ -19,7 +20,7 @@ public class WalletController {
     private final IbanService ibanService;
     private final SupportService supportService;
 
-    // Sabit kullanıcı ID'sini application.yml'den alıyoruz.
+    // Sabit kullanıcı ID'sini application.yml'den enjekte ediyoruz.
     @Value("${demo.user.id}")
     private Long demoUserId;
 
@@ -31,10 +32,10 @@ public class WalletController {
         this.supportService = supportService;
     }
 
-    // 'Hesabım' ve 'Kredi Kartım' ekranı için
+    // 'Hesabım' ekranı için - Artık path'te userId yok.
     @GetMapping("/account")
     public ResponseEntity<AccountDTO> getAccountDetails() {
-        // Servise artık path'ten gelen bir ID yerine sabit ID'yi veriyoruz.
+        // Servise artık path'ten gelen bir ID yerine sabit demoUserId'yi veriyoruz.
         return ResponseEntity.ok(accountService.getAccountDetails(demoUserId));
     }
 
@@ -57,7 +58,7 @@ public class WalletController {
         return ResponseEntity.ok().build();
     }
 
-    // 'Para Çek' onayı (Bu metot userId zaten kullanmıyordu)
+    // 'Para Çek' onayı (Bu metot zaten userId kullanmıyordu)
     @PostMapping("/withdraw/confirm/{txId}")
     public ResponseEntity<Void> confirmWithdrawal(@PathVariable String txId) {
         actionService.confirmWithdrawal(txId);
@@ -85,10 +86,11 @@ public class WalletController {
     }
 
     // Kayıtlı IBAN'ı sil
-    // Güvenlik kontrolü artık servisin içinde yapılıyor.
     @DeleteMapping("/ibans/{ibanId}")
     public ResponseEntity<Void> deleteIban(@PathVariable Long ibanId) {
-        ibanService.deleteIban(demoUserId, ibanId); // Güvenlik için demoUserId'yi de yolluyoruz.
+        // Güvenlik için demoUserId'yi servise göndererek,
+        // sadece bu kullanıcıya ait IBAN'ın silinmesini sağlıyoruz.
+        ibanService.deleteIban(demoUserId, ibanId);
         return ResponseEntity.noContent().build();
     }
 
@@ -115,5 +117,20 @@ public class WalletController {
     @GetMapping("/support/contact")
     public ResponseEntity<ContactInfoDTO> getContact() {
         return ResponseEntity.ok(supportService.getContactInfo());
+    }
+
+    // QR-Wallet: Ödeme için QR kod oluşturma
+    @PostMapping("/payment/qr/generate")
+    public ResponseEntity<QrCodeDTO> generateQrCode(@RequestParam double amount) {
+        // Sabit demo kullanıcımız için QR kod oluşturuyoruz.
+        QrCodeDTO qrCode = actionService.generatePaymentQrCode(demoUserId, amount);
+        return ResponseEntity.ok(qrCode);
+    }
+
+    // Fatura Ödeme: Fatura ödeme talebi gönderme
+    @PostMapping("/bills/pay")
+    public ResponseEntity<String> payBill(@RequestBody BillPaymentRequestDTO billPaymentRequest) {
+        actionService.payBill(demoUserId, billPaymentRequest);
+        return ResponseEntity.ok("Fatura ödeme talebi başarıyla alındı ve işleme konuldu.");
     }
 }

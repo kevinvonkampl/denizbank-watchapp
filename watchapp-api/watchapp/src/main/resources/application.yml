@@ -20,17 +20,27 @@ spring:
   datasource:
     # URL, kullanıcı adı ve şifre gibi hassas bilgiler ortam değişkenlerinden (environment variables) okunur.
     # Bu, kodun güvenliğini artırır.
-    url: jdbc:postgresql://${AIVEN_DB_HOST}:${AIVEN_DB_PORT}/${AIVEN_DB_NAME}?sslmode=require
-    username: ${AIVEN_DB_USERNAME}
-    password: ${AIVEN_DB_PASSWORD}
+    url: jdbc:postgresql://pg-2e8d2585-denizbank-watchapp.c.aivencloud.com:13313/defaultdb?sslmode=require
+    username: avnadmin
+    password: AVNS_2shXhYvWfpf4TNn0SVc
   jpa:
     hibernate:
-      ddl-auto: update # Geliştirme sırasında DB şemasını kodla senkronize tutar.
+      ddl-auto: create
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect # PostgreSQL için doğru lehçe.
-        format_sql: true # SQL loglarını daha okunaklı yapar.
-    show-sql: true # Çalışan SQL sorgularını konsolda gösterir.
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+
+
+demo:
+  user:
+    # Bizim veritabanımızdaki demo kullanıcısının ID'si.
+    # IBAN, geri bildirim gibi verileri bu kullanıcıya bağlamak için kullanacağız.
+    id: 1
+    # OBP'den manuel olarak alınan, uzun süreli DirectLogin token'ı.
+    obp-auth-token: "eyJhbGciOiJIUzI1NiJ9.eyIiOiIifQ.SIDzuoFc2KtBwVRDw4nJekslcledWYeRLBRoT5idf0Q"
+
 
 # ===================================================================
 # CUSTOM APPLICATION SPECIFIC CONFIGURATION
@@ -44,24 +54,20 @@ app:
   obp:
     api:
       base-url: "https://apisandbox.openbankproject.com"
-      consumer-key: ${OBP_CONSUMER_KEY}
-      consumer-secret: ${OBP_CONSUMER_SECRET}
-      # OBP sandbox'a giriş için kullanılacak test kullanıcısı bilgileri.
-      test-user:
-        username: ${OBP_TEST_USERNAME}
-        password: ${OBP_TEST_PASSWORD}
+      consumer-key: xbtcuv1irenll5oqocxyic13mmgnqmfv1nzykwua
+      consumer-secret: iuf2xhpuedf21zkqtl14qiavvz0pxhuifkf4olyv
 
   # Harici finansal veri sağlayıcısının (Alpha Vantage) ayarları.
   financial-api:
     alphavantage:
-      api-key: ${ALPHAVANTAGE_API_KEY} # Alpha Vantage'dan alınan ücretsiz API anahtarı.
+      api-key: CKYXF4ADLG1KB3ZL # Alpha Vantage'dan alınan ücretsiz API anahtarı.
       base-url: "https://www.alphavantage.co"
 
   # Twilio SMS servisi için ayarlar.
   twilio:
-    account-sid: ${TWILIO_ACCOUNT_SID} # Twilio konsolundan alınan SID.
-    auth-token: ${TWILIO_AUTH_TOKEN} # Twilio konsolundan alınan Auth Token.
-    from-number: ${TWILIO_FROM_NUMBER} # Twilio'dan alınan telefon numarası.
+    account-sid: AC54b0514723b9392c9c7e294150b45c1f
+    auth-token: 60e01e226404fe5be2f1422f14563349
+    from-number: +19388003645
 
 # ===================================================================
 # LOGGING CONFIGURATION
