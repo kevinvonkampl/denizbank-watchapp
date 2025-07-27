@@ -1,6 +1,6 @@
 # --- AŞAMA 1: Build Aşaması ---
 # Uygulamayı derlemek için tam bir JDK ve Maven ortamı olan bir imaj kullanıyoruz.
-FROM eclipse-temurin:17-jdk-jammy AS builder
+FROM eclipse-temurin:21-jdk-jammy AS builder
 
 # Çalışma dizinini /app olarak ayarlıyoruz.
 WORKDIR /app
@@ -24,7 +24,7 @@ RUN ./mvnw clean package -DskipTests
 
 # --- AŞAMA 2: Çalıştırma Aşaması ---
 # Sadece Java Runtime Environment (JRE) içeren çok daha küçük bir temel imaj kullanıyoruz.
-FROM eclipse-temurin:17-jre-jammy
+FROM eclipse-temurin:21-jre-jammy
 
 # Çalışma dizinini /app olarak ayarlıyoruz.
 WORKDIR /app

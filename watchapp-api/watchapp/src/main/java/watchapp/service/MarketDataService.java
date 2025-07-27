@@ -1,3 +1,4 @@
+// Dosya Yolu: src/main/java/watchapp/service/MarketDataService.java
 package watchapp.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,6 +7,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import watchapp.dto.ExchangeRateDTO;
 import watchapp.dto.StockDTO;
 
@@ -17,99 +19,86 @@ public class MarketDataService {
     private final WebClient webClient;
     private final String apiKey;
 
+    // Constructor'ı yeni FMP ayarlarını okuyacak şekilde güncelliyoruz.
     public MarketDataService(WebClient.Builder webClientBuilder,
-                             @Value("${app.financial-api.alphavantage.base-url}") String baseUrl,
-                             @Value("${app.financial-api.alphavantage.api-key}") String apiKey) {
+                             @Value("${app.financial-api.fmp.base-url}") String baseUrl,
+                             @Value("${app.financial-api.fmp.api-key}") String apiKey) {
         this.webClient = webClientBuilder.baseUrl(baseUrl).build();
         this.apiKey = apiKey;
     }
 
-    // --- Alpha Vantage'dan Gelen Cevapları Temsil Eden DTO'lar ---
-    private record AlphaVantageQuoteResponse(@JsonProperty("Global Quote") GlobalQuoteData globalQuote) {}
-    private record GlobalQuoteData(
-            @JsonProperty("01. symbol") String symbol,
-            @JsonProperty("05. price") String price,
-            @JsonProperty("10. change percent") String changePercent
+    // ===================================================================
+    // FMP'den Gelen Cevapları Temsil Eden DTO'lar (Daha Basit)
+    // ===================================================================
+
+    // FMP, hisse senedi ve döviz verilerini genellikle bir liste içinde tek bir eleman olarak döndürür.
+    // Bu yüzden gelen cevabın bir List<FmpQuote> veya List<FmpExchangeRate> olmasını bekliyoruz.
+    private record FmpQuote(
+            String symbol,
+            double price,
+            double change,
+            @JsonProperty("changesPercentage") double changePercent // FMP bu ismi kullanıyor
     ) {}
 
-    private record AlphaVantageExchangeResponse(@JsonProperty("Realtime Currency Exchange Rate") ExchangeRateData exchangeRate) {}
-    private record ExchangeRateData(
-            @JsonProperty("5. Exchange Rate") String rate,
-            @JsonProperty("1. From_Currency Code") String fromCurrency,
-            @JsonProperty("3. To_Currency Code") String toCurrency
+    private record FmpExchangeRate(
+            String symbol,
+            double rate,
+            String timestamp // timestamp de geliyor, kullanmayacağız ama DTO'da bulunsun
     ) {}
 
 
-    // --- Gerçek API Metotları ---
+    // ===================================================================
+    // Gerçek API Metotları (FMP API'sine göre güncellendi)
+    // ===================================================================
 
-    /**
-     * Popüler hisse senetlerinin güncel fiyatlarını Alpha Vantage'dan çeker.
-     * Bu metodun sonucu, ilk çağrıdan sonra 30 dakika boyunca önbellekte tutulur.
-     */
-    @Cacheable("stocks") // "stocks" isimli cache'e sonucu kaydet
+    @Cacheable("stocks")
     public List<StockDTO> getRecentStocks() {
-        System.out.println(">>> HİSSE SENEDİ VERİSİ API'DEN ÇEKİLİYOR (CACHE'DE DEĞİL) <<<");
-        // İzlemek istediğimiz hisseler (Yahoo Finance formatı, Türkiye için .IS uzantılı)
-        List<String> symbols = List.of("TUPRS.IS", "THYAO.IS", "GARAN.IS");
+        System.out.println(">>> HİSSE SENEDİ VERİSİ FMP API'DEN ÇEKİLİYOR (CACHE'DE DEĞİL) <<<");
+        // Borsa İstanbul sembollerini virgülle birleştirerek tek bir istekte yollayabiliriz.
+        String symbols = "TUPRS.IS,THYAO.IS,GARAN.IS";
 
-        // Her bir sembol için asenkron olarak API'yi çağır ve sonuçları birleştir.
-        return Flux.fromIterable(symbols)
-                .flatMap(this::fetchStockQuote)
-                .collectList()
-                .block(); // Asenkron işlemlerin bitmesini bekle ve sonucu List olarak al.
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/v3/quote/{symbols}")
+                        .queryParam("apikey", apiKey)
+                        .build(symbols))
+                .retrieve()
+                .bodyToFlux(FmpQuote.class) // Cevap bir liste olduğu için Flux kullanıyoruz
+                // Gelen her FmpQuote nesnesini bizim standart StockDTO'muza çeviriyoruz.
+                .map(fmpQuote -> new StockDTO(fmpQuote.symbol(), fmpQuote.price(), fmpQuote.change()))
+                .collectList() // Tüm sonuçları bir listede topla
+                .block(); // Asenkron işlemin bitmesini bekle
     }
 
-    /**
-     * Popüler döviz kurlarının güncel değerlerini Alpha Vantage'dan çeker.
-     * Bu metodun sonucu da 30 dakika boyunca önbellekte tutulur.
-     */
-    @Cacheable("exchangeRates") // "exchangeRates" isimli cache'e sonucu kaydet
+    @Cacheable("exchangeRates")
     public List<ExchangeRateDTO> getExchangeRates() {
-        System.out.println(">>> DÖVİZ KURU VERİSİ API'DEN ÇEKİLİYOR (CACHE'DE DEĞİL) <<<");
-        List<String[]> currencyPairs = List.of(new String[]{"USD", "TRY"}, new String[]{"EUR", "TRY"}, new String[]{"GBP", "TRY"});
+        System.out.println(">>> DÖVİZ KURU VERİSİ FMP API'DEN ÇEKİLİYOR (CACHE'DE DEĞİL) <<<");
+        // İzlemek istediğimiz döviz çiftleri
+        List<String> currencyPairs = List.of("USDTRY", "EURTRY", "GBPTRY");
 
+        // Her bir döviz çifti için ayrı ayrı istek atıyoruz.
+        // FMP'nin limitleri daha yüksek olduğu için gecikmeye gerek yok.
         return Flux.fromIterable(currencyPairs)
-                .flatMap(pair -> fetchExchangeRate(pair[0], pair[1]))
+                .flatMap(this::fetchExchangeRate)
                 .collectList()
                 .block();
     }
 
-    // --- Yardımcı Metotlar ---
+    // --- Yardımcı Metot ---
 
-    private Flux<StockDTO> fetchStockQuote(String symbol) {
+    private Mono<ExchangeRateDTO> fetchExchangeRate(String pair) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/query")
-                        .queryParam("function", "GLOBAL_QUOTE")
-                        .queryParam("symbol", symbol)
+                        .path("/api/v3/fx/{pair}")
                         .queryParam("apikey", apiKey)
-                        .build())
+                        .build(pair))
                 .retrieve()
-                .bodyToMono(AlphaVantageQuoteResponse.class)
-                .map(response -> {
-                    GlobalQuoteData data = response.globalQuote();
-                    // Gelen '1.23%' gibi bir stringi double'a çevir
-                    double change = Double.parseDouble(data.changePercent().replace("%", ""));
-                    return new StockDTO(data.symbol(), Double.parseDouble(data.price()), change);
-                })
-                .flux(); // Mono'yu Flux'a çevirerek flatMap ile uyumlu hale getir.
-    }
-
-    private Flux<ExchangeRateDTO> fetchExchangeRate(String from, String to) {
-        return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/query")
-                        .queryParam("function", "CURRENCY_EXCHANGE_RATE")
-                        .queryParam("from_currency", from)
-                        .queryParam("to_currency", to)
-                        .queryParam("apikey", apiKey)
-                        .build())
-                .retrieve()
-                .bodyToMono(AlphaVantageExchangeResponse.class)
-                .map(response -> {
-                    ExchangeRateData data = response.exchangeRate();
-                    return new ExchangeRateDTO(data.fromCurrency() + "/" + data.toCurrency(), Double.parseDouble(data.rate()));
-                })
-                .flux();
+                .bodyToFlux(FmpExchangeRate.class) // Cevap yine liste içinde tek eleman olarak gelebilir
+                .next() // Listenin ilk (ve tek) elemanını al
+                .map(fmpRate -> {
+                    // USDTRY'yi USD/TRY formatına çevirelim
+                    String formattedPair = fmpRate.symbol().substring(0, 3) + "/" + fmpRate.symbol().substring(3);
+                    return new ExchangeRateDTO(formattedPair, fmpRate.rate());
+                });
     }
 }

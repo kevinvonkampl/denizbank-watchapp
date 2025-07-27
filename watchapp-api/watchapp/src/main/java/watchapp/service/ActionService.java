@@ -16,13 +16,13 @@ public class ActionService {
     private final FeedbackRepository feedbackRepository;
     private final TwilioSmsService twilioSmsService;
     private final UserRepository userRepository;
-    private final ObpApiClient obpApiClient;
 
-    public ActionService(FeedbackRepository feedbackRepository, TwilioSmsService twilioSmsService, UserRepository userRepository, ObpApiClient obpApiClient) {
+
+    public ActionService(FeedbackRepository feedbackRepository, TwilioSmsService twilioSmsService, UserRepository userRepository) {
         this.feedbackRepository = feedbackRepository;
         this.twilioSmsService = twilioSmsService;
         this.userRepository = userRepository;
-        this.obpApiClient = obpApiClient;
+
     }
 
 
@@ -52,17 +52,11 @@ public class ActionService {
      * hesapları arasında döviz alım/satım işlemi yapar.
      */
     public void executeCurrencyExchange(Long userId, String fromCurrency, String toCurrency, double amount) {
-        User user = userRepository.findById(userId).orElseThrow(/*...*/);
-        String token = user.getObpAuthToken();
-
-        // 1. Kullanıcının TRY ve USD hesaplarını bulmak için OBP'ye istek at.
-        // ObpApiClient.ObpAccount tryAccount = obpApiClient.findAccountByCurrency(token, "TRY").block();
-        // ObpApiClient.ObpAccount usdAccount = obpApiClient.findAccountByCurrency(token, "USD").block();
-
-        System.out.println("Kullanıcı " + userId + " için " + amount + " " + fromCurrency + " -> " + toCurrency + " işlemi başlatılıyor...");
-
-        // 2. Para transferi isteğini başlat.
-        // obpApiClient.createTransactionRequest(token, tryAccount.bankId(), tryAccount.id(), usdAccount.bankId(), usdAccount.id(), amount, toCurrency).block();
+        // Artık OBP'ye veya User entity'sine ihtiyacımız yok.
+        System.out.println(String.format(
+                "PARA DEĞİŞİM SİMÜLASYONU: Kullanıcı %d için %.2f %s -> %s işlemi gerçekleştirildi.",
+                userId, amount, fromCurrency, toCurrency
+        ));
     }
 
     /**

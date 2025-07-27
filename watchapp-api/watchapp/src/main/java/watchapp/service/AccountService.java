@@ -1,67 +1,40 @@
-// Dosya Yolu: watchapp/service/AccountService.java
+// Dosya Yolu: src/main/java/watchapp/service/AccountService.java
 package watchapp.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import watchapp.dto.AccountDTO;
 import watchapp.dto.TransactionDTO;
-import watchapp.service.ObpApiClient.AccountDataPackage;
-import watchapp.service.ObpApiClient.ObpAccount;
-import watchapp.service.ObpApiClient.ObpTransaction;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
 
-    private final ObpApiClient obpApiClient;
-
-    // Sabit OBP token'ını application.yml dosyasından enjekte ediyoruz.
-    @Value("${demo.user.obp-auth-token}")
-    private String obpAuthToken;
-
-    public AccountService(ObpApiClient obpApiClient) {
-        this.obpApiClient = obpApiClient;
-    }
+    // Artık ObpApiClient veya TokenManagerService'e ihtiyacımız yok.
+    // Constructor boş kalabilir veya hiç olmayabilir.
+    public AccountService() {}
 
     /**
-     * Demo kullanıcısının sabit OBP token'ını kullanarak hesap detaylarını
-     * ve son üç işlemi getiren metot.
-     * @param userId Loglama gibi amaçlar için alınır, OBP çağrısında doğrudan kullanılmaz.
-     * @return Hesap bilgilerini içeren bir AccountDTO nesnesi.
+     * "Hesabım" ekranı için sabit (mock) verileri döndüren metot.
+     * Bu, OBP entegrasyonunun çalışmadığı durumlarda demo'nun devam etmesini sağlar.
+     * @param userId Loglama için tutulur, veri üretiminde kullanılmaz.
+     * @return Önceden tanımlanmış hesap bilgilerini içeren bir AccountDTO nesnesi.
      */
     public AccountDTO getAccountDetails(Long userId) {
-        System.out.println("Hesap detayları getiriliyor. Sabit Kullanıcı ID: " + userId);
+        System.out.println("SİMÜLASYON: Sabit hesap detayları getiriliyor. Kullanıcı ID: " + userId);
 
-        // Token'ın application.yml'de ayarlanıp ayarlanmadığını kontrol et.
-        if (obpAuthToken == null || obpAuthToken.isBlank() || obpAuthToken.equals("${OBP_STATIC_TOKEN}")) {
-            throw new IllegalStateException("Geçerli bir OBP token'ı 'application.yml' dosyasında 'demo.user.obp-auth-token' olarak tanımlanmamış veya ortam değişkeni bulunamamıştır.");
-        }
+        // Sabit son 3 işlemi oluşturalım.
+        List<TransactionDTO> mockTransactions = List.of(
+                new TransactionDTO("Spotify Abonelik", -64.99, "2024-07-25"),
+                new TransactionDTO("Starbucks", -110.50, "2024-07-24"),
+                new TransactionDTO("Maaş Yatırıldı", 15000.00, "2024-07-23")
+        );
 
-        // ObpApiClient üzerinden hem hesap bilgisini hem de transaction'ları tek çağrıda getir.
-        // Artık veritabanından token okumaya gerek yok, doğrudan enjekte edilen token'ı kullanıyoruz.
-        AccountDataPackage dataPackage = obpApiClient.getAccountDataPackage(obpAuthToken).block();
-
-        if (dataPackage == null) {
-            throw new RuntimeException("OBP'den hesap verileri alınamadı. Token geçersiz veya API ulaşılamıyor olabilir.");
-        }
-
-        ObpAccount obpAccount = dataPackage.account();
-        List<ObpTransaction> obpTransactions = dataPackage.transactions();
-
-        List<TransactionDTO> transactionDTOs = obpTransactions.stream()
-                .map(tx -> new TransactionDTO(
-                        tx.details().description(),
-                        Double.parseDouble(tx.details().value().amount()),
-                        tx.details().completedDate()
-                ))
-                .collect(Collectors.toList());
-
+        // Sabit hesap bilgilerini (bakiye, IBAN) ve işlemleri bir DTO içinde döndürelim.
         return new AccountDTO(
-                obpAccount.iban(),
-                Double.parseDouble(obpAccount.balance().amount()),
-                transactionDTOs
+                "TR33 0006 1005 1978 6457 8413 26", // Sabit bir IBAN
+                9923.25, // Sabit bir bakiye
+                mockTransactions // Oluşturduğumuz sabit işlemler
         );
     }
 }

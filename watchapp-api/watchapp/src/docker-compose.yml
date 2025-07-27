@@ -12,8 +12,6 @@ services:
     depends_on:
       postgres-db:
         condition: service_healthy
-    env_file:
-      - ./src/main/resources/.env
 
   postgres-db:
     image: postgres:15
@@ -23,11 +21,11 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: ${AIVEN_DB_USERNAME}
-      POSTGRES_PASSWORD: ${AIVEN_DB_PASSWORD}
-      POSTGRES_DB: ${AIVEN_DB_NAME}
+      POSTGRES_USER: avnadmin
+      POSTGRES_PASSWORD: AVNS_2shXhYvWfpf4TNn0SVc
+      POSTGRES_DB: defaultdb
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${AIVEN_DB_USERNAME} -d ${AIVEN_DB_NAME}"]
+      test: ["CMD-SHELL", "pg_isready -U avnadmin -d defaultdb"]
       interval: 10s
       timeout: 5s
       retries: 5

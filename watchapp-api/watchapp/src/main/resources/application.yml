@@ -25,7 +25,7 @@ spring:
     password: AVNS_2shXhYvWfpf4TNn0SVc
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create # Her başlangıçta tabloları sıfırdan oluşturur. Demo için uygun.
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -33,35 +33,30 @@ spring:
     show-sql: true
 
 
+# ===================================================================
+# DEMO USER CONFIGURATION
+# ===================================================================
 demo:
   user:
     # Bizim veritabanımızdaki demo kullanıcısının ID'si.
     # IBAN, geri bildirim gibi verileri bu kullanıcıya bağlamak için kullanacağız.
     id: 1
-    # OBP'den manuel olarak alınan, uzun süreli DirectLogin token'ı.
-    obp-auth-token: "eyJhbGciOiJIUzI1NiJ9.eyIiOiIifQ.SIDzuoFc2KtBwVRDw4nJekslcledWYeRLBRoT5idf0Q"
+    # Bu alan artık kullanılmıyor ama referans olarak kalabilir.
+    # obp-auth-token: "..."
 
 
 # ===================================================================
 # CUSTOM APPLICATION SPECIFIC CONFIGURATION
 # ===================================================================
+# --- BURASI EKLENDİ ---
 app:
-  # Basit API anahtarı ile güvenlik. Saat uygulaması bu anahtarı her istekte göndermeli.
-  security:
-    api-key: "8ea408e3-8094-4006-aaa7-4c78dfb69508"
-
-  # Open Bank Project API ayarları.
-  obp:
-    api:
-      base-url: "https://apisandbox.openbankproject.com"
-      consumer-key: xbtcuv1irenll5oqocxyic13mmgnqmfv1nzykwua
-      consumer-secret: iuf2xhpuedf21zkqtl14qiavvz0pxhuifkf4olyv
-
   # Harici finansal veri sağlayıcısının (Alpha Vantage) ayarları.
   financial-api:
-    alphavantage:
-      api-key: CKYXF4ADLG1KB3ZL # Alpha Vantage'dan alınan ücretsiz API anahtarı.
-      base-url: "https://www.alphavantage.co"
+    # FMP (Financial Modeling Prep) API Ayarları
+    fmp:
+
+      api-key: "M34oaQdteR4BOKezRXZ4MB8O4vw4Gja6"
+      base-url: "https://financialmodelingprep.com"
 
   # Twilio SMS servisi için ayarlar.
   twilio:
@@ -76,7 +71,6 @@ logging:
   level:
     root: INFO # Genel log seviyesi.
     # Kendi projemizin paketleri için daha detaylı loglama.
-    # Paket adını kendi projeninkine göre değiştirmelisin (örn: com.denizbank.watchapp).
     watchapp: DEBUG
     org.hibernate.SQL: DEBUG # Veritabanı sorgularını gösterir.
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE # Sorgulardaki parametreleri gösterir.
