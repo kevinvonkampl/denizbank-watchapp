@@ -55,7 +55,8 @@ class MainActivity : ComponentActivity() {
         
         // Çağrı Merkezi
         findViewById<CardView>(R.id.card_cagri_merkezi).setOnClickListener {
-            showToast("Çağrı Merkezi seçildi")
+            val intent = Intent(this, CallCenterActivity::class.java)
+            startActivity(intent)
         }
         
         // Döviz Al-Sat

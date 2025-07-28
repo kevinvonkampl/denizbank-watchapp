@@ -27,4 +27,8 @@
     
     <!-- IBAN Bilgileri Ekranı Renkleri -->
     <color name="qr_code_red">#F44336</color>
+    
+    <!-- Çağrı Merkezi Ekranı Renkleri -->
+    <color name="call_center_red">#F44336</color>
+    <color name="call_button_green">#4CAF50</color>
 </resources> 
