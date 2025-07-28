@@ -5,68 +5,73 @@
 
 package com.example.watchapp.presentation
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.TimeText
-import androidx.wear.tooling.preview.devices.WearDevices
+import androidx.cardview.widget.CardView
 import com.example.watchapp.R
-import com.example.watchapp.presentation.theme.WatchappTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
-
         super.onCreate(savedInstanceState)
-
-        setTheme(android.R.style.Theme_DeviceDefault)
-
-        setContent {
-            WearApp("Android")
+        setContentView(R.layout.activity_main)
+        
+        // Menü kartlarına tıklama olaylarını ekle
+        setupMenuClickListeners()
+    }
+    
+    private fun setupMenuClickListeners() {
+        // Hesabım
+        findViewById<CardView>(R.id.card_hesabim).setOnClickListener {
+            showToast("Hesabım seçildi")
+        }
+        
+        // Kredi Kartlarım
+        findViewById<CardView>(R.id.card_kredi_kartlarim).setOnClickListener {
+            showToast("Kredi Kartlarım seçildi")
+        }
+        
+        // Borsa
+        findViewById<CardView>(R.id.card_borsa).setOnClickListener {
+            showToast("Borsa seçildi")
+        }
+        
+        // Para Çek
+        findViewById<CardView>(R.id.card_para_cek).setOnClickListener {
+            showToast("Para Çek seçildi")
+        }
+        
+        // Döviz Kuru
+        findViewById<CardView>(R.id.card_doviz_kuru).setOnClickListener {
+            showToast("Döviz Kuru seçildi")
+        }
+        
+        // En Yakın ATM
+        findViewById<CardView>(R.id.card_en_yakin_atm).setOnClickListener {
+            showToast("En Yakın ATM seçildi")
+        }
+        
+        // Çağrı Merkezi
+        findViewById<CardView>(R.id.card_cagri_merkezi).setOnClickListener {
+            showToast("Çağrı Merkezi seçildi")
+        }
+        
+        // Döviz Al-Sat
+        findViewById<CardView>(R.id.card_doviz_al_sat).setOnClickListener {
+            val intent = Intent(this, CurrencyBuySellActivity::class.java)
+            startActivity(intent)
+        }
+        
+        // IBAN Bilgileri
+        findViewById<CardView>(R.id.card_iban_bilgileri).setOnClickListener {
+            val intent = Intent(this, IbanInfoActivity::class.java)
+            startActivity(intent)
         }
     }
-}
-
-@Composable
-fun WearApp(greetingName: String) {
-    WatchappTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background),
-            contentAlignment = Alignment.Center
-        ) {
-            TimeText()
-            Greeting(greetingName = greetingName)
-        }
+    
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-}
-
-@Composable
-fun Greeting(greetingName: String) {
-    Text(
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Center,
-        color = MaterialTheme.colors.primary,
-        text = stringResource(R.string.hello_world, greetingName)
-    )
-}
-
-@Preview(device = WearDevices.SMALL_ROUND, showSystemUi = true)
-@Composable
-fun DefaultPreview() {
-    WearApp("Preview Android")
 }

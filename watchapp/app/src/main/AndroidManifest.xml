@@ -41,6 +41,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".presentation.CurrencyBuySellActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.DeviceDefault" />
+
+        <activity
+            android:name=".presentation.IbanInfoActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.DeviceDefault" />
+
     </application>
 
 </manifest>

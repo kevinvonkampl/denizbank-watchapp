@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- Ana Renkler -->
+    <color name="primary_color">#2196F3</color>
+    <color name="background_color">#FFFFFF</color>
+    <color name="text_color">#212121</color>
+    
+    <!-- Menü Kart Renkleri -->
+    <color name="hesabim_color">#E3F2FD</color>
+    <color name="kredi_kartlarim_color">#E8F5E8</color>
+    <color name="borsa_color">#FFF3E0</color>
+    <color name="para_cek_color">#F3E5F5</color>
+    <color name="doviz_kuru_color">#ECEFF1</color>
+    <color name="en_yakin_atm_color">#EFEBE9</color>
+    <color name="cagri_merkezi_color">#FCE4EC</color>
+    <color name="doviz_al_sat_color">#E0F2F1</color>
+    <color name="iban_bilgileri_color">#E8EAF6</color>
+    
+    <!-- Döviz Al-Sat Ekranı Renkleri -->
+    <color name="dark_grey">#2A2A2A</color>
+    <color name="light_grey">#B0B0B0</color>
+    <color name="buy_button_color">#00BCD4</color>
+    <color name="sell_button_color">#F44336</color>
+    
+    <!-- IBAN Bilgileri Ekranı Renkleri -->
+    <color name="qr_code_red">#F44336</color>
+</resources> 
