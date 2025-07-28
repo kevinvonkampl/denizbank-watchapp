@@ -1,0 +1,76 @@
+# ===================================================================
+# SERVER CONFIGURATION
+# ===================================================================
+server:
+  port: 8080 # Uygulamanın çalışacağı port
+
+# ===================================================================
+# SPRING BOOT CORE CONFIGURATION
+# ===================================================================
+spring:
+  # 'dev' profili, geliştirme ortamı için ayarları içerir.
+  profiles:
+    active: dev
+  application:
+    name: "watchapp"
+
+  # ===================================================================
+  # DATABASE & JPA CONFIGURATION (AivenDB)
+  # ===================================================================
+  datasource:
+    # URL, kullanıcı adı ve şifre gibi hassas bilgiler ortam değişkenlerinden (environment variables) okunur.
+    # Bu, kodun güvenliğini artırır.
+    url: jdbc:postgresql://pg-2e8d2585-denizbank-watchapp.c.aivencloud.com:13313/defaultdb?sslmode=require
+    username: avnadmin
+    password: AVNS_2shXhYvWfpf4TNn0SVc
+  jpa:
+    hibernate:
+      ddl-auto: create # Her başlangıçta tabloları sıfırdan oluşturur. Demo için uygun.
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+
+
+# ===================================================================
+# DEMO USER CONFIGURATION
+# ===================================================================
+demo:
+  user:
+    # Bizim veritabanımızdaki demo kullanıcısının ID'si.
+    # IBAN, geri bildirim gibi verileri bu kullanıcıya bağlamak için kullanacağız.
+    id: 1
+    # Bu alan artık kullanılmıyor ama referans olarak kalabilir.
+    # obp-auth-token: "..."
+
+
+# ===================================================================
+# CUSTOM APPLICATION SPECIFIC CONFIGURATION
+# ===================================================================
+# --- BURASI EKLENDİ ---
+app:
+  # Harici finansal veri sağlayıcısının (Alpha Vantage) ayarları.
+  financial-api:
+    # FMP (Financial Modeling Prep) API Ayarları
+    fmp:
+
+      api-key: "M34oaQdteR4BOKezRXZ4MB8O4vw4Gja6"
+      base-url: "https://financialmodelingprep.com"
+
+  # Twilio SMS servisi için ayarlar.
+  twilio:
+    account-sid: AC54b0514723b9392c9c7e294150b45c1f
+    auth-token: 60e01e226404fe5be2f1422f14563349
+    from-number: +19388003645
+
+# ===================================================================
+# LOGGING CONFIGURATION
+# ===================================================================
+logging:
+  level:
+    root: INFO # Genel log seviyesi.
+    # Kendi projemizin paketleri için daha detaylı loglama.
+    watchapp: DEBUG
+    org.hibernate.SQL: DEBUG # Veritabanı sorgularını gösterir.
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE # Sorgulardaki parametreleri gösterir.
