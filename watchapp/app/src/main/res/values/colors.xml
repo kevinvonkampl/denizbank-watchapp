@@ -24,4 +24,7 @@
     <color name="light_grey">#B0B0B0</color>
     <color name="buy_button_color">#00BCD4</color>
     <color name="sell_button_color">#F44336</color>
+    
+    <!-- IBAN Bilgileri Ekranı Renkleri -->
+    <color name="qr_code_red">#F44336</color>
 </resources> 

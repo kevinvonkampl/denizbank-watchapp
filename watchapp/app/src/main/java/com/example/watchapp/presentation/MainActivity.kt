@@ -66,7 +66,8 @@ class MainActivity : ComponentActivity() {
         
         // IBAN Bilgileri
         findViewById<CardView>(R.id.card_iban_bilgileri).setOnClickListener {
-            showToast("IBAN Bilgileri seçildi")
+            val intent = Intent(this, IbanInfoActivity::class.java)
+            startActivity(intent)
         }
     }
     
