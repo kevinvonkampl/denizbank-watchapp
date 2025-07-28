@@ -19,7 +19,6 @@ public class MarketDataService {
     private final WebClient webClient;
     private final String apiKey;
 
-    // Constructor'ı yeni FMP ayarlarını okuyacak şekilde güncelliyoruz.
     public MarketDataService(WebClient.Builder webClientBuilder,
                              @Value("${app.financial-api.fmp.base-url}") String baseUrl,
                              @Value("${app.financial-api.fmp.api-key}") String apiKey) {
@@ -27,35 +26,33 @@ public class MarketDataService {
         this.apiKey = apiKey;
     }
 
-    // ===================================================================
-    // FMP'den Gelen Cevapları Temsil Eden DTO'lar (Daha Basit)
-    // ===================================================================
-
-    // FMP, hisse senedi ve döviz verilerini genellikle bir liste içinde tek bir eleman olarak döndürür.
-    // Bu yüzden gelen cevabın bir List<FmpQuote> veya List<FmpExchangeRate> olmasını bekliyoruz.
+    // FMP'den gelen cevapları temsil eden DTO'lar
     private record FmpQuote(
-            String symbol,
-            double price,
-            double change,
-            @JsonProperty("changesPercentage") double changePercent // FMP bu ismi kullanıyor
+            String symbol, double price, double change,
+            @JsonProperty("changesPercentage") double changePercent
     ) {}
 
-    private record FmpExchangeRate(
-            String symbol,
-            double rate,
-            String timestamp // timestamp de geliyor, kullanmayacağız ama DTO'da bulunsun
+    // FMP Forex API'sinden gelen response için düzeltilmiş DTO
+    private record FmpForexResponse(
+            String ticker,
+            @JsonProperty("bid") double bid,
+            @JsonProperty("ask") double ask,
+            @JsonProperty("open") double open,
+            @JsonProperty("low") double low,
+            @JsonProperty("high") double high,
+            @JsonProperty("changes") double changes,
+            @JsonProperty("date") String date
     ) {}
-
 
     // ===================================================================
-    // Gerçek API Metotları (FMP API'sine göre güncellendi)
+    // GERÇEK, ÇALIŞAN API METOTLARI
     // ===================================================================
 
     @Cacheable("stocks")
     public List<StockDTO> getRecentStocks() {
-        System.out.println(">>> HİSSE SENEDİ VERİSİ FMP API'DEN ÇEKİLİYOR (CACHE'DE DEĞİL) <<<");
-        // Borsa İstanbul sembollerini virgülle birleştirerek tek bir istekte yollayabiliriz.
-        String symbols = "TUPRS.IS,THYAO.IS,GARAN.IS";
+        System.out.println(">>> NASDAQ HİSSE VERİSİ FMP API'DEN ÇEKİLİYOR (CACHE'DE DEĞİL) <<<");
+
+        String symbols = "AAPL,MSFT,GOOGL,AMZN,NVDA";
 
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -63,42 +60,79 @@ public class MarketDataService {
                         .queryParam("apikey", apiKey)
                         .build(symbols))
                 .retrieve()
-                .bodyToFlux(FmpQuote.class) // Cevap bir liste olduğu için Flux kullanıyoruz
-                // Gelen her FmpQuote nesnesini bizim standart StockDTO'muza çeviriyoruz.
+                .bodyToFlux(FmpQuote.class)
+                .onErrorResume(e -> {
+                    System.err.println("Hisse senedi verisi alınamadı. API hatası: " + e.getMessage());
+                    return Flux.empty();
+                })
                 .map(fmpQuote -> new StockDTO(fmpQuote.symbol(), fmpQuote.price(), fmpQuote.change()))
-                .collectList() // Tüm sonuçları bir listede topla
-                .block(); // Asenkron işlemin bitmesini bekle
+                .collectList()
+                .block();
     }
 
     @Cacheable("exchangeRates")
     public List<ExchangeRateDTO> getExchangeRates() {
         System.out.println(">>> DÖVİZ KURU VERİSİ FMP API'DEN ÇEKİLİYOR (CACHE'DE DEĞİL) <<<");
-        // İzlemek istediğimiz döviz çiftleri
-        List<String> currencyPairs = List.of("USDTRY", "EURTRY", "GBPTRY");
 
-        // Her bir döviz çifti için ayrı ayrı istek atıyoruz.
-        // FMP'nin limitleri daha yüksek olduğu için gecikmeye gerek yok.
+        // FMP'nin desteklediği forex çiftleri (doğru format)
+        List<String> currencyPairs = List.of("EURUSD", "GBPUSD", "USDJPY");
+
         return Flux.fromIterable(currencyPairs)
-                .flatMap(this::fetchExchangeRate)
+                .flatMap(this::fetchExchangeRateAlternative)
                 .collectList()
                 .block();
     }
 
-    // --- Yardımcı Metot ---
+    // --- Düzeltilmiş Yardımcı Metot ---
+    private Mono<ExchangeRateDTO> fetchExchangeRateFixed(String pair) {
+        System.out.println(">>> Döviz çifti çekiliyor: " + pair);
 
-    private Mono<ExchangeRateDTO> fetchExchangeRate(String pair) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/api/v3/fx/{pair}")
+                        .path("/api/v3/fx")
+                        .queryParam("apikey", apiKey)
+                        .build())
+                .retrieve()
+                .bodyToFlux(FmpForexResponse.class)
+                .filter(forex -> pair.equals(forex.ticker())) // İstediğimiz çifti filtrele
+                .next()
+                .onErrorResume(e -> {
+                    System.err.println("Döviz kuru verisi alınamadı (" + pair + "). Hata: " + e.getMessage());
+                    e.printStackTrace();
+                    return Mono.empty();
+                })
+                .map(fmpRate -> {
+                    System.out.println(">>> Başarılı forex verisi: " + fmpRate.ticker() + " = " + fmpRate.bid());
+
+                    // Formatı düzenle: EURUSD -> EUR/USD
+                    String formattedPair = pair.substring(0, 3) + "/" + pair.substring(3);
+
+                    // Bid fiyatını kullanıyoruz (ask de kullanılabilir)
+                    return new ExchangeRateDTO(formattedPair, fmpRate.bid());
+                });
+    }
+
+    // Alternatif metot - Eğer yukarıdaki çalışmazsa bu deneyin
+    private Mono<ExchangeRateDTO> fetchExchangeRateAlternative(String pair) {
+        System.out.println(">>> Alternatif yöntemle döviz çifti çekiliyor: " + pair);
+
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/v3/quote/{symbol}")
                         .queryParam("apikey", apiKey)
                         .build(pair))
                 .retrieve()
-                .bodyToFlux(FmpExchangeRate.class) // Cevap yine liste içinde tek eleman olarak gelebilir
-                .next() // Listenin ilk (ve tek) elemanını al
-                .map(fmpRate -> {
-                    // USDTRY'yi USD/TRY formatına çevirelim
-                    String formattedPair = fmpRate.symbol().substring(0, 3) + "/" + fmpRate.symbol().substring(3);
-                    return new ExchangeRateDTO(formattedPair, fmpRate.rate());
+                .bodyToFlux(FmpQuote.class)
+                .next()
+                .onErrorResume(e -> {
+                    System.err.println("Alternatif döviz kuru verisi alınamadı (" + pair + "). Hata: " + e.getMessage());
+                    return Mono.empty();
+                })
+                .map(quote -> {
+                    System.out.println(">>> Alternatif başarılı forex verisi: " + quote.symbol() + " = " + quote.price());
+
+                    String formattedPair = pair.substring(0, 3) + "/" + pair.substring(3);
+                    return new ExchangeRateDTO(formattedPair, quote.price());
                 });
     }
 }
