@@ -56,4 +56,21 @@ dependencies {
     androidTestImplementation libs.ui.test.junit4
     debugImplementation libs.ui.tooling
     debugImplementation libs.ui.test.manifest
+    // Retrofit & GSON Converter
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Kotlin Coroutines (Asenkron işlemler için)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    // ViewModel ve LiveData/StateFlow için gerekli
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+
+    // UI testleri için Espresso (şu an kullanmıyoruz ama genellikle birlikte bulunur)
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
+    // Normal birim testleri için JUnit 4 (androidTest'te de kullanılabilir)
+    testImplementation("junit:junit:4.13.2")
 }
