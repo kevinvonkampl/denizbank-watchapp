@@ -8,7 +8,7 @@ object RetrofitClient {
     // ÇOK ÖNEMLİ: Bilgisayarının yerel IP adresini buraya yaz.
     // Windows'ta 'ipconfig', Mac/Linux'ta 'ifconfig' ile bulabilirsin.
     // Emülatör ve bilgisayarın aynı Wi-Fi ağında olmalı.
-    private const val BASE_URL = "http://192.168.1.105:8080/"
+    private const val BASE_URL = "http://127.0.0.1:8080/"
 
     val apiService: WatchAppApiService by lazy {
         Retrofit.Builder()

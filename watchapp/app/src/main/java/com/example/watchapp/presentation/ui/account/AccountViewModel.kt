@@ -1,5 +1,7 @@
 package com.example.watchapp.presentation.ui.account
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.watchapp.presentation.data.model.*
@@ -40,8 +42,7 @@ class AccountViewModel : ViewModel() {
             } catch (e: Exception) {
                 // Hata olursa durumu güncelle
                 _uiState.value = AccountUiState(isLoading = false, error = e.message)
-                // Hatayı logla
-                e.printStackTrace()
+                Log.e(TAG, "Hesap detayları çekilirken hata oluştu!", e)
             }
         }
     }

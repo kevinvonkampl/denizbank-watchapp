@@ -55,4 +55,7 @@ interface WatchAppApiService {
 
     @POST("api/v1/bills/pay")
     suspend fun payBill(@Body billPaymentRequest: BillPaymentRequestDTO): Response<String>
+
+    @GET("api/v1/cryptos")
+    suspend fun getCryptos(): List<CryptoDTO>
 }
