@@ -52,7 +52,8 @@ class MainActivity : ComponentActivity() {
         
         // En Yakın ATM
         findViewById<CardView>(R.id.card_en_yakin_atm).setOnClickListener {
-            showToast("En Yakın ATM seçildi")
+            val intent = Intent(this, NearestAtmActivity::class.java)
+            startActivity(intent)
         }
         
         // Çağrı Merkezi

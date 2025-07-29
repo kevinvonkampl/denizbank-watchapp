@@ -39,4 +39,9 @@
     
     <!-- Para Çek Ekranı Renkleri -->
     <color name="withdraw_button_green">#4CAF50</color>
+    
+    <!-- En Yakın ATM Ekranı Renkleri -->
+    <color name="light_gray_background">#F5F5F5</color>
+    <color name="atm_icon_red">#F44336</color>
+    <color name="selection_blue">#2196F3</color>
 </resources> 

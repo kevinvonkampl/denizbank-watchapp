@@ -63,6 +63,11 @@
             android:exported="false"
             android:theme="@android:style/Theme.DeviceDefault" />
 
+        <activity
+            android:name=".presentation.NearestAtmActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.DeviceDefault" />
+
     </application>
 
 </manifest>
