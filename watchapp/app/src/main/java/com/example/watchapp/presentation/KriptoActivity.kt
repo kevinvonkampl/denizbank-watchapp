@@ -2,102 +2,145 @@ package com.example.watchapp.presentation
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.watchapp.R
+import com.example.watchapp.presentation.data.model.CryptoDTO
+import com.example.watchapp.presentation.ui.market.MarketViewModel
+import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class KriptoActivity : ComponentActivity() {
-    
+class KriptoActivity : AppCompatActivity() {
+
+    private val viewModel: MarketViewModel by viewModels()
+    private lateinit var loadingIndicator: ProgressBar
+    private lateinit var timeTextView: TextView
+    private lateinit var cryptoListContainer: LinearLayout
+
+    private val cryptoCardHolders = mutableListOf<CryptoCardHolder>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kripto)
-        
+
         setupViews()
-        setupClickListeners()
+        observeViewModel()
+
+        findViewById<TextView>(R.id.tv_back).setOnClickListener { finish() }
         updateTime()
     }
-    
+
     private fun setupViews() {
-        // Saat güncellemesi
-        updateTime()
+        loadingIndicator = findViewById(R.id.loading_indicator)
+        timeTextView = findViewById(R.id.tv_time)
+        cryptoListContainer = findViewById(R.id.crypto_list_container)
+
+        // XML'deki 2 kartın elemanlarını bulup listeye ekliyoruz
+        cryptoCardHolders.add(CryptoCardHolder(
+            card = findViewById(R.id.card_crypto_1),
+            info = findViewById(R.id.crypto_info_1),
+            subInfo = findViewById(R.id.crypto_subinfo_1),
+            graph = findViewById(R.id.crypto_graph_1),
+            price = findViewById(R.id.crypto_price_1),
+            change = findViewById(R.id.crypto_change_1)
+        ))
+        cryptoCardHolders.add(CryptoCardHolder(
+            card = findViewById(R.id.card_crypto_2),
+            info = findViewById(R.id.crypto_info_2),
+            subInfo = findViewById(R.id.crypto_subinfo_2),
+            graph = findViewById(R.id.crypto_graph_2),
+            price = findViewById(R.id.crypto_price_2),
+            change = findViewById(R.id.crypto_change_2)
+        ))
     }
-    
-    private fun setupClickListeners() {
-        // Back butonu
-        findViewById<TextView>(R.id.tv_back).setOnClickListener {
-            finish()
-        }
-        
-        // BTC kartı
-        findViewById<CardView>(R.id.card_btc).setOnClickListener {
-            showCryptoDetails("BTC", "Bitcoin", "$66,66", "6,6%", "$666666", "$6.6666")
-        }
-        
-        // ETH kartı
-        findViewById<CardView>(R.id.card_eth).setOnClickListener {
-            showCryptoDetails("ETH", "Ethereum", "$64,99", "6,6%", "$666666", "$6.6666")
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    loadingIndicator.visibility = if (state.isLoading) View.VISIBLE else View.GONE
+
+                    if (state.cryptos.isNotEmpty()) {
+                        cryptoListContainer.visibility = View.VISIBLE
+                        updateUiWithCryptoData(state.cryptos)
+                    }
+
+                    state.error?.let {
+                        Toast.makeText(this@KriptoActivity, "Hata: $it", Toast.LENGTH_LONG).show()
+                        cryptoListContainer.visibility = View.INVISIBLE
+                    }
+                }
+            }
         }
     }
-    
+
+    private fun updateUiWithCryptoData(cryptos: List<CryptoDTO>) {
+        val count = minOf(cryptos.size, cryptoCardHolders.size)
+
+        for (i in 0 until count) {
+            val cryptoData = cryptos[i]
+            val holder = cryptoCardHolders[i]
+            val isPositive = cryptoData.priceChangePercentage24h >= 0
+
+            // Para formatlayıcı
+            val priceFormatter = DecimalFormat("$#,##0.00")
+
+            // Verileri UI elemanlarına yaz
+            holder.info.text = "${cryptoData.symbol.uppercase()} ${String.format("%.2f%%", cryptoData.priceChangePercentage24h)}"
+            holder.subInfo.text = cryptoData.name // Alt bilgi olarak tam adını yazalım
+            holder.price.text = priceFormatter.format(cryptoData.currentPrice)
+            holder.change.text = String.format("%.2f", cryptoData.currentPrice * (cryptoData.priceChangePercentage24h / 100)) // Günlük Fiyat Değişimi
+
+            // Renk ve ikonu ayarla
+            val color = if (isPositive) getColor(R.color.green) else getColor(R.color.red)
+            holder.info.setTextColor(color) // Yüzdelik değişimin rengini ana bilgiye yansıt
+            holder.graph.setImageResource(if (isPositive) R.drawable.ic_graph_up else R.drawable.ic_graph_down)
+
+            // Tıklama olayını ayarla
+            holder.card.setOnClickListener {
+                showCryptoDetails(cryptoData)
+            }
+        }
+    }
+
     private fun updateTime() {
-        val timeTextView = findViewById<TextView>(R.id.tv_time)
-        val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
-        timeTextView.text = currentTime
+        timeTextView.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
     }
-    
-    private fun showCryptoDetails(symbol: String, name: String, price: String, change: String, marketCap: String, volume: String) {
-        val cryptoInfo = """
-            Kripto Para: $symbol - $name
-            Fiyat: $price
-            Değişim: $change
-            Piyasa Değeri: $marketCap
-            Hacim: $volume
-            
-            Bu kripto para hakkında detaylı bilgi almak ister misiniz?
-        """.trimIndent()
-        
+
+    private fun showCryptoDetails(crypto: CryptoDTO) {
+        val priceFormatter = DecimalFormat("$#,##0.00")
+        val cryptoInfo = "Kripto: ${crypto.name} (${crypto.symbol.uppercase()})\n" +
+                "Fiyat: ${priceFormatter.format(crypto.currentPrice)}\n" +
+                "24s Değişim: ${String.format("%.2f%%", crypto.priceChangePercentage24h)}"
+
         AlertDialog.Builder(this)
-            .setTitle("$symbol Kripto Detayları")
+            .setTitle("${crypto.name} Detayları")
             .setMessage(cryptoInfo)
-            .setPositiveButton("Al") { _, _ ->
-                showBuyCryptoDialog(symbol, name, price)
-            }
-            .setNegativeButton("Sat") { _, _ ->
-                showSellCryptoDialog(symbol, name, price)
-            }
-            .setNeutralButton("Tamam") { dialog, _ ->
-                dialog.dismiss()
-            }
+            .setPositiveButton("Al", null)
+            .setNegativeButton("Sat", null)
+            .setNeutralButton("Kapat", null)
             .show()
     }
-    
-    private fun showBuyCryptoDialog(symbol: String, name: String, price: String) {
-        AlertDialog.Builder(this)
-            .setTitle("Kripto Para Al")
-            .setMessage("$symbol ($name) kripto parasını $price fiyatından almak istiyor musunuz?")
-            .setPositiveButton("Al") { _, _ ->
-                Toast.makeText(this, "$symbol kripto parası başarıyla alındı!", Toast.LENGTH_SHORT).show()
-            }
-            .setNegativeButton("İptal") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
-    }
-    
-    private fun showSellCryptoDialog(symbol: String, name: String, price: String) {
-        AlertDialog.Builder(this)
-            .setTitle("Kripto Para Sat")
-            .setMessage("$symbol ($name) kripto parasını $price fiyatından satmak istiyor musunuz?")
-            .setPositiveButton("Sat") { _, _ ->
-                Toast.makeText(this, "$symbol kripto parası başarıyla satıldı!", Toast.LENGTH_SHORT).show()
-            }
-            .setNegativeButton("İptal") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
-    }
-} 
+
+    // Her bir kartın UI elemanlarını tutan basit bir data class
+    data class CryptoCardHolder(
+        val card: CardView,
+        val info: TextView,
+        val subInfo: TextView,
+        val graph: ImageView,
+        val price: TextView,
+        val change: TextView
+    )
+}

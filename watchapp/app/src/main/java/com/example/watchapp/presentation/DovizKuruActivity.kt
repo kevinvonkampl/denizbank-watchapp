@@ -1,113 +1,128 @@
 package com.example.watchapp.presentation
 
-import android.app.AlertDialog
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.cardview.widget.CardView
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.watchapp.R
+import com.example.watchapp.presentation.data.model.ExchangeRateDTO
+import com.example.watchapp.presentation.ui.market.MarketViewModel
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.random.Random
 
-class DovizKuruActivity : ComponentActivity() {
-    
+class DovizKuruActivity : AppCompatActivity() {
+
+    private val viewModel: MarketViewModel by viewModels()
+    private lateinit var loadingIndicator: ProgressBar
+    private lateinit var timeTextView: TextView
+    private lateinit var currencyListContainer: LinearLayout
+
+    private val currencyCardHolders = mutableListOf<CurrencyCardHolder>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_doviz_kuru)
-        
+
         setupViews()
-        setupClickListeners()
+        observeViewModel()
+
+        findViewById<TextView>(R.id.tv_back).setOnClickListener { finish() }
         updateTime()
     }
-    
+
     private fun setupViews() {
-        // Saat güncellemesi
-        updateTime()
+        loadingIndicator = findViewById(R.id.loading_indicator)
+        timeTextView = findViewById(R.id.tv_time)
+        currencyListContainer = findViewById(R.id.currency_list_container)
+
+        // XML'deki 3 kartın elemanlarını bulup listeye ekliyoruz
+        currencyCardHolders.add(CurrencyCardHolder(
+            flag = findViewById(R.id.currency_flag_1),
+            code = findViewById(R.id.currency_code_1),
+            rate = findViewById(R.id.currency_rate_1),
+            change = findViewById(R.id.currency_change_1)
+        ))
+        currencyCardHolders.add(CurrencyCardHolder(
+            flag = findViewById(R.id.currency_flag_2),
+            code = findViewById(R.id.currency_code_2),
+            rate = findViewById(R.id.currency_rate_2),
+            change = findViewById(R.id.currency_change_2)
+        ))
+        currencyCardHolders.add(CurrencyCardHolder(
+            flag = findViewById(R.id.currency_flag_3),
+            code = findViewById(R.id.currency_code_3),
+            rate = findViewById(R.id.currency_rate_3),
+            change = findViewById(R.id.currency_change_3)
+        ))
     }
-    
-    private fun setupClickListeners() {
-        // Back butonu
-        findViewById<TextView>(R.id.tv_back).setOnClickListener {
-            finish()
-        }
-        
-        // EUR kartı
-        findViewById<CardView>(R.id.card_eur).setOnClickListener {
-            showCurrencyDetails("EUR", "Euro", "89,908322", "0,11%", "🇪🇺", false)
-        }
-        
-        // CNY kartı
-        findViewById<CardView>(R.id.card_cny).setOnClickListener {
-            showCurrencyDetails("CNY", "Çin Yuanı", "13,882171", "0,02%", "🇨🇳", true)
-        }
-        
-        // GBP kartı
-        findViewById<CardView>(R.id.card_gbp).setOnClickListener {
-            showCurrencyDetails("GBP", "İngiliz Sterlini", "115,548566", "1,73%", "🇬🇧", true)
-        }
-        
-        // CAD kartı
-        findViewById<CardView>(R.id.card_cad).setOnClickListener {
-            showCurrencyDetails("CAD", "Kanada Doları", "22,1268506", "1,73%", "🇨🇦", true)
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    loadingIndicator.visibility = if (state.isLoading) View.VISIBLE else View.GONE
+
+                    if (state.exchangeRates.isNotEmpty()) {
+                        currencyListContainer.visibility = View.VISIBLE
+                        updateUiWithRates(state.exchangeRates)
+                    }
+
+                    state.error?.let {
+                        Toast.makeText(this@DovizKuruActivity, "Hata: $it", Toast.LENGTH_LONG).show()
+                        currencyListContainer.visibility = View.INVISIBLE
+                    }
+                }
+            }
         }
     }
-    
+
+    private fun updateUiWithRates(rates: List<ExchangeRateDTO>) {
+        val count = minOf(rates.size, currencyCardHolders.size)
+        for (i in 0 until count) {
+            val rateData = rates[i]
+            val holder = currencyCardHolders[i]
+
+            // API'den değişim oranı gelmediği için simüle ediyoruz
+            val simulatedChange = Random.nextDouble(-2.0, 2.0)
+            val isPositive = simulatedChange >= 0
+
+            // Verileri ilgili UI elemanlarına yaz
+            holder.code.text = rateData.currencyPair.substringBefore("/")
+            holder.rate.text = String.format("%.4f", rateData.rate)
+            holder.change.text = String.format("%.2f%%", simulatedChange)
+
+            // Bayrağı ayarla
+            when (rateData.currencyPair) {
+                "EUR/USD" -> holder.flag.setImageResource(R.drawable.ic_flag_eur)
+                "GBP/USD" -> holder.flag.setImageResource(R.drawable.ic_flag_gbp)
+                else -> holder.flag.setImageResource(R.drawable.ic_flag_usd) // Varsayılan
+            }
+
+            // Renkleri ayarla
+            val color = if (isPositive) getColor(R.color.green) else getColor(R.color.red)
+            holder.change.setTextColor(color)
+        }
+    }
+
     private fun updateTime() {
-        val timeTextView = findViewById<TextView>(R.id.tv_time)
-        val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
-        timeTextView.text = currentTime
+        timeTextView.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
     }
-    
-    private fun showCurrencyDetails(code: String, name: String, rate: String, change: String, flag: String, isPositive: Boolean) {
-        val changeColor = if (isPositive) "Yeşil (Artış)" else "Kırmızı (Düşüş)"
-        val currencyInfo = """
-            Döviz: $code - $name
-            Kuru: $rate TL
-            Değişim: $change ($changeColor)
-            Bayrak: $flag
-            
-            Bu döviz hakkında detaylı bilgi almak ister misiniz?
-        """.trimIndent()
-        
-        AlertDialog.Builder(this)
-            .setTitle("$code Döviz Detayları")
-            .setMessage(currencyInfo)
-            .setPositiveButton("Al") { _, _ ->
-                showBuyCurrencyDialog(code, name, rate)
-            }
-            .setNegativeButton("Sat") { _, _ ->
-                showSellCurrencyDialog(code, name, rate)
-            }
-            .setNeutralButton("Tamam") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
-    }
-    
-    private fun showBuyCurrencyDialog(code: String, name: String, rate: String) {
-        AlertDialog.Builder(this)
-            .setTitle("Döviz Al")
-            .setMessage("$code ($name) dövizini $rate TL kuruyla almak istiyor musunuz?")
-            .setPositiveButton("Al") { _, _ ->
-                Toast.makeText(this, "$code dövizi başarıyla alındı!", Toast.LENGTH_SHORT).show()
-            }
-            .setNegativeButton("İptal") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
-    }
-    
-    private fun showSellCurrencyDialog(code: String, name: String, rate: String) {
-        AlertDialog.Builder(this)
-            .setTitle("Döviz Sat")
-            .setMessage("$code ($name) dövizini $rate TL kuruyla satmak istiyor musunuz?")
-            .setPositiveButton("Sat") { _, _ ->
-                Toast.makeText(this, "$code dövizi başarıyla satıldı!", Toast.LENGTH_SHORT).show()
-            }
-            .setNegativeButton("İptal") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
-    }
-} 
+
+    // Her bir kartın UI elemanlarını tutan basit bir data class
+    data class CurrencyCardHolder(
+        val flag: ImageView,
+        val code: TextView,
+        val rate: TextView,
+        val change: TextView
+    )
+}

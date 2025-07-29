@@ -55,7 +55,8 @@ dependencies {
     
     // CardView için
     implementation 'androidx.cardview:cardview:1.0.0'
-    
+    implementation libs.appcompat
+
     androidTestImplementation platform(libs.compose.bom)
     androidTestImplementation libs.ui.test.junit4
     debugImplementation libs.ui.tooling
@@ -77,4 +78,15 @@ dependencies {
 
     // Normal birim testleri için JUnit 4 (androidTest'te de kullanılabilir)
     testImplementation("junit:junit:4.13.2")
+
+    // ViewModel, LiveData ve Lifecycle için
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+
+    // Activity ve Fragment için KTX (Kotlin Extensions)
+    implementation("androidx.activity:activity-ktx:1.9.0")
+
+    // RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.wear:wear:1.3.0")
 }

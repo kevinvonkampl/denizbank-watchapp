@@ -1,327 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_background"
-    android:fillViewport="true">
+    android:background="@color/black"
+    tools:context=".presentation.DovizKuruActivity">
 
+    <!-- Top Bar -->
     <LinearLayout
+        android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp">
+
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="10:18"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/header_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_bar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="Döviz"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <!-- Döviz Kartları -->
+    <LinearLayout
+        android:id="@+id/currency_list_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_title"
+        android:layout_marginTop="16dp"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:paddingHorizontal="12dp"
+        android:visibility="invisible"
+        tools:visibility="visible">
 
-        <!-- Top Bar -->
-        <LinearLayout
+        <!-- KART 1 -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_currency_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="@color/dark_grey_card"
+            app:cardCornerRadius="24dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:padding="12dp">
+                <ImageView android:id="@+id/currency_flag_1" android:layout_width="40dp" android:layout_height="40dp" android:layout_marginEnd="12dp" tools:src="@drawable/ic_flag_eur" />
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:id="@+id/currency_code_1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="EUR" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" />
+                    <TextView android:id="@+id/currency_rate_1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="@color/light_grey" android:textSize="14sp" />
+                </LinearLayout>
+                <TextView android:id="@+id/currency_change_1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-%" android:textColor="@color/red" android:textSize="16sp" android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-            <!-- Sol - Back -->
-            <TextView
-                android:id="@+id/tv_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Back"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground" />
-
-            <!-- Orta - Başlık -->
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Döviz"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:gravity="center" />
-
-            <!-- Sağ - Saat -->
-            <TextView
-                android:id="@+id/tv_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="10:18"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
-
-        </LinearLayout>
-
-        <!-- Döviz Kartları -->
-        <LinearLayout
+        <!-- KART 2 -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_currency_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!-- EUR Kartı -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_eur"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardBackgroundColor="@color/dark_grey_card"
-                app:cardElevation="2dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="12dp">
-
-                    <!-- Sol - Bayrak -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🇪🇺"
-                        android:textSize="24sp"
-                        android:layout_marginEnd="12dp" />
-
-                    <!-- Orta - Döviz Bilgisi -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="EUR"
-                            android:textColor="@color/white"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="89,908322"
-                            android:textColor="@color/white"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
-
-                    <!-- Sağ - Değişim -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0,11%"
-                        android:textColor="#FF4444"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="@color/dark_grey_card"
+            app:cardCornerRadius="24dp">
+            <!-- KART 1 ile aynı içerik, ID'ler hariç: ..._2 -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:padding="12dp">
+                <ImageView android:id="@+id/currency_flag_2" android:layout_width="40dp" android:layout_height="40dp" android:layout_marginEnd="12dp" tools:src="@drawable/ic_flag_gbp" />
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:id="@+id/currency_code_2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="GBP" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" />
+                    <TextView android:id="@+id/currency_rate_2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="@color/light_grey" android:textSize="14sp" />
                 </LinearLayout>
+                <TextView android:id="@+id/currency_change_2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+%" android:textColor="@color/green" android:textSize="16sp" android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-            </androidx.cardview.widget.CardView>
-
-            <!-- CNY Kartı -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_cny"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardBackgroundColor="@color/dark_grey"
-                app:cardElevation="2dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="12dp">
-
-                    <!-- Sol - Bayrak -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🇨🇳"
-                        android:textSize="24sp"
-                        android:layout_marginEnd="12dp" />
-
-                    <!-- Orta - Döviz Bilgisi -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="CNY"
-                            android:textColor="@color/white"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="13,882171"
-                            android:textColor="@color/white"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
-
-                    <!-- Sağ - Değişim -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0,02%"
-                        android:textColor="#44FF44"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
+        <!-- KART 3 -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_currency_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/dark_grey_card"
+            app:cardCornerRadius="24dp">
+            <!-- KART 1 ile aynı içerik, ID'ler hariç: ..._3 -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:padding="12dp">
+                <ImageView android:id="@+id/currency_flag_3" android:layout_width="40dp" android:layout_height="40dp" android:layout_marginEnd="12dp" tools:src="@drawable/ic_flag_usd" />
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:id="@+id/currency_code_3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="USD" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" />
+                    <TextView android:id="@+id/currency_rate_3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="@color/light_grey" android:textSize="14sp" />
                 </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- GBP Kartı -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_gbp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardBackgroundColor="@color/dark_grey"
-                app:cardElevation="2dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="12dp">
-
-                    <!-- Sol - Bayrak -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🇬🇧"
-                        android:textSize="24sp"
-                        android:layout_marginEnd="12dp" />
-
-                    <!-- Orta - Döviz Bilgisi -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="GBP"
-                            android:textColor="@color/white"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="115,548566"
-                            android:textColor="@color/white"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
-
-                    <!-- Sağ - Değişim -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1,73%"
-                        android:textColor="#44FF44"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- CAD Kartı -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_cad"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardBackgroundColor="@color/dark_grey"
-                app:cardElevation="2dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="12dp">
-
-                    <!-- Sol - Bayrak -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🇨🇦"
-                        android:textSize="24sp"
-                        android:layout_marginEnd="12dp" />
-
-                    <!-- Orta - Döviz Bilgisi -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="CAD"
-                            android:textColor="@color/white"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="22,1268506"
-                            android:textColor="@color/white"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
-
-                    <!-- Sağ - Değişim -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1,73%"
-                        android:textColor="#44FF44"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
+                <TextView android:id="@+id/currency_change_3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+%" android:textColor="@color/green" android:textSize="16sp" android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 
-</ScrollView> 
+    <ProgressBar
+        android:id="@+id/loading_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+</RelativeLayout>
+

@@ -2,124 +2,173 @@ package com.example.watchapp.presentation
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.cardview.widget.CardView
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewModelScope
 import com.example.watchapp.R
+import com.example.watchapp.presentation.data.model.ExchangeRateDTO
+import com.example.watchapp.presentation.data.remote.RetrofitClient
+import com.example.watchapp.presentation.ui.market.MarketViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CurrencyBuySellActivity : ComponentActivity() {
-    
-    private var currentCurrency = "USD"
-    private var currentRate = 18.829
-    
+// Bu Activity hem veri gösterip hem işlem yaptığı için kendi küçük ViewModel'i olabilir.
+class ExchangeActionViewModel : ViewModel() {
+    private val _exchangeResult = MutableStateFlow<String?>(null)
+    val exchangeResult = _exchangeResult.asStateFlow()
+
+    fun executeExchange(from: String, to: String, amount: Double) {
+        viewModelScope.launch {
+            try {
+                // Sadece göstermelik bir miktar (100 birim) ile işlem yapıyoruz.
+                // Gerçekte bu miktar kullanıcıdan alınır.
+                RetrofitClient.apiService.executeExchange(from, to, 100.0)
+                _exchangeResult.value = "$from -> $to işlemi başarılı!"
+            } catch (e: Exception) {
+                _exchangeResult.value = "İşlem başarısız: ${e.message}"
+            }
+        }
+    }
+}
+
+
+class CurrencyBuySellActivity : AppCompatActivity() {
+
+    // Veri çekmek için MarketViewModel
+    private val marketViewModel: MarketViewModel by viewModels()
+    // İşlem yapmak için ActionViewModel
+    private val actionViewModel: ExchangeActionViewModel by viewModels()
+
+    // UI Elemanları
+    private lateinit var currencyValueTextView: TextView
+    private lateinit var currencyCodeTextView: TextView
+    private lateinit var currencySelector: LinearLayout
+    private lateinit var buyButton: Button
+    private lateinit var sellButton: Button
+    private lateinit var loadingIndicator: ProgressBar
+
+    // Durum değişkenleri
+    private var allRates: List<ExchangeRateDTO> = emptyList()
+    private var selectedRate: ExchangeRateDTO? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_currency_buy_sell)
-        
+
         setupViews()
         setupClickListeners()
+        observeViewModels()
         updateTime()
     }
-    
+
     private fun setupViews() {
-        // Saat güncellemesi
-        updateTime()
-        
-        // Döviz değerini güncelle
-        updateCurrencyDisplay()
+        currencyValueTextView = findViewById(R.id.tv_currency_value)
+        currencyCodeTextView = findViewById(R.id.tv_currency_code)
+        currencySelector = findViewById(R.id.currency_selector)
+        buyButton = findViewById(R.id.btn_buy)
+        sellButton = findViewById(R.id.btn_sell)
+        loadingIndicator = findViewById(R.id.loading_indicator)
+        findViewById<TextView>(R.id.btn_back).setOnClickListener { finish() }
     }
-    
+
     private fun setupClickListeners() {
-        // Geri butonu
-        findViewById<TextView>(R.id.btn_back).setOnClickListener {
-            finish()
-        }
-        
-        // Döviz kodu seçimi
-        findViewById<TextView>(R.id.tv_currency_code).setOnClickListener {
+        currencySelector.setOnClickListener {
             showCurrencySelection()
         }
-        
-        // Al butonu
-        findViewById<CardView>(R.id.btn_buy).setOnClickListener {
-            showBuyDialog()
+
+        buyButton.setOnClickListener {
+            selectedRate?.let {
+                // USD -> EUR alımı gibi düşünelim. "from" USD, "to" diğer para birimi.
+                val fromCurrency = it.currencyPair.substringAfter("/")
+                val toCurrency = it.currencyPair.substringBefore("/")
+                actionViewModel.executeExchange(fromCurrency, toCurrency, 100.0)
+            }
         }
-        
-        // Sat butonu
-        findViewById<CardView>(R.id.btn_sell).setOnClickListener {
-            showSellDialog()
+
+        sellButton.setOnClickListener {
+            selectedRate?.let {
+                // EUR -> USD satımı gibi düşünelim.
+                val fromCurrency = it.currencyPair.substringBefore("/")
+                val toCurrency = it.currencyPair.substringAfter("/")
+                actionViewModel.executeExchange(fromCurrency, toCurrency, 100.0)
+            }
         }
     }
-    
-    private fun updateTime() {
-        val timeTextView = findViewById<TextView>(R.id.tv_time)
-        val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
-        timeTextView.text = currentTime
+
+    private fun observeViewModels() {
+        // 1. Piyasa verilerini dinle
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                marketViewModel.uiState.collect { state ->
+                    loadingIndicator.visibility = if (state.isLoading) View.VISIBLE else View.GONE
+
+                    if (state.exchangeRates.isNotEmpty()) {
+                        allRates = state.exchangeRates
+                        // Başlangıçta ilk kuru seçili yap
+                        if (selectedRate == null) {
+                            selectedRate = allRates.first()
+                            updateCurrencyDisplay()
+                        }
+                    }
+
+                    state.error?.let {
+                        Toast.makeText(this@CurrencyBuySellActivity, "Hata: $it", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+
+        // 2. Al/Sat işlem sonucunu dinle
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                actionViewModel.exchangeResult.collect { result ->
+                    result?.let {
+                        Toast.makeText(this@CurrencyBuySellActivity, it, Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
     }
-    
+
     private fun updateCurrencyDisplay() {
-        val currencyValueTextView = findViewById<TextView>(R.id.tv_currency_value)
-        val currencyCodeTextView = findViewById<TextView>(R.id.tv_currency_code)
-        
-        currencyValueTextView.text = "$${String.format("%.3f", currentRate)}"
-        currencyCodeTextView.text = currentCurrency
+        selectedRate?.let {
+            currencyValueTextView.text = String.format("$%.3f", it.rate)
+            currencyCodeTextView.text = it.currencyPair.substringBefore("/")
+        }
     }
-    
+
     private fun showCurrencySelection() {
-        val currencies = arrayOf("USD", "EUR", "GBP", "JPY", "TRY")
-        
+        if (allRates.isEmpty()) {
+            Toast.makeText(this, "Döviz kurları yükleniyor...", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val currencyPairs = allRates.map { it.currencyPair }.toTypedArray()
+
         AlertDialog.Builder(this)
             .setTitle("Döviz Seçin")
-            .setItems(currencies) { _, which ->
-                currentCurrency = currencies[which]
-                // Farklı dövizler için farklı oranlar
-                currentRate = when (currentCurrency) {
-                    "USD" -> 18.829
-                    "EUR" -> 20.456
-                    "GBP" -> 23.789
-                    "JPY" -> 0.125
-                    "TRY" -> 1.0
-                    else -> 18.829
-                }
+            .setItems(currencyPairs) { _, which ->
+                selectedRate = allRates[which]
                 updateCurrencyDisplay()
-                Toast.makeText(this, "$currentCurrency seçildi", Toast.LENGTH_SHORT).show()
             }
-            .setNegativeButton("İptal") { dialog, _ ->
-                dialog.dismiss()
-            }
+            .setNegativeButton("İptal", null)
             .show()
     }
-    
-    private fun showBuyDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("Döviz Al")
-            .setMessage("$currentCurrency almak istediğinizden emin misiniz?\n\nMevcut Kur: $${String.format("%.3f", currentRate)}")
-            .setPositiveButton("Al") { _, _ ->
-                // Burada gerçek alım işlemi yapılabilir
-                Toast.makeText(this, "$currentCurrency alım işlemi başarılı!", Toast.LENGTH_LONG).show()
-                finish()
-            }
-            .setNegativeButton("İptal") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
+
+    private fun updateTime() {
+        findViewById<TextView>(R.id.tv_time).text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
     }
-    
-    private fun showSellDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("Döviz Sat")
-            .setMessage("$currentCurrency satmak istediğinizden emin misiniz?\n\nMevcut Kur: $${String.format("%.3f", currentRate)}")
-            .setPositiveButton("Sat") { _, _ ->
-                // Burada gerçek satış işlemi yapılabilir
-                Toast.makeText(this, "$currentCurrency satış işlemi başarılı!", Toast.LENGTH_LONG).show()
-                finish()
-            }
-            .setNegativeButton("İptal") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
-    }
-} 
+}

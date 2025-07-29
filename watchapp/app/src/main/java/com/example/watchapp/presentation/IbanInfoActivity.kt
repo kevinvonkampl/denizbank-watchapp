@@ -1,105 +1,81 @@
 package com.example.watchapp.presentation
 
-import android.app.AlertDialog
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.watchapp.R
+import com.example.watchapp.presentation.ui.account.AccountViewModel
+import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class IbanInfoActivity : ComponentActivity() {
-    
-    private val vadesizIban = "TR33 0001 0012 3178 4521 6245 06"
-    private val vadeliIban = "TR33 0001 0012 3178 4521 6245 06"
-    private val vadesizBalance = "8.568,00₺"
-    private val vadeliBalance = "8.568,00₺"
-    
+class IbanInfoActivity : AppCompatActivity() {
+    private val viewModel: AccountViewModel by viewModels()
+
+    // UI Elemanları
+    private lateinit var ibanTextView: TextView
+    private lateinit var balanceTextView: TextView
+    private lateinit var timeTextView: TextView
+    private lateinit var loadingIndicator: ProgressBar
+    private lateinit var accountCard: CardView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_iban_info)
-        
+
         setupViews()
-        setupClickListeners()
+        observeViewModel()
+
+        findViewById<TextView>(R.id.btn_back).setOnClickListener { finish() }
         updateTime()
     }
-    
+
     private fun setupViews() {
-        // Saat güncellemesi
-        updateTime()
-        
-        // IBAN ve bakiye bilgilerini güncelle
-        updateAccountInfo()
+        ibanTextView = findViewById(R.id.tv_iban)
+        balanceTextView = findViewById(R.id.tv_balance)
+        timeTextView = findViewById(R.id.tv_time)
+        loadingIndicator = findViewById(R.id.loading_indicator)
+        accountCard = findViewById(R.id.account_card_container)
     }
-    
-    private fun setupClickListeners() {
-        // Geri butonu
-        findViewById<TextView>(R.id.btn_back).setOnClickListener {
-            finish()
-        }
-        
-        // Vadesiz IBAN'a tıklama
-        findViewById<TextView>(R.id.tv_iban_vadesiz).setOnClickListener {
-            copyIbanToClipboard(vadesizIban, "Vadesiz")
-        }
-        
-        // Vadeli IBAN'a tıklama
-        findViewById<TextView>(R.id.tv_iban_vadeli).setOnClickListener {
-            copyIbanToClipboard(vadeliIban, "Vadeli")
-        }
-        
-        // Vadesiz bakiye'ye tıklama
-        findViewById<TextView>(R.id.tv_balance_vadesiz).setOnClickListener {
-            showBalanceDetails("Vadesiz", vadesizBalance)
-        }
-        
-        // Vadeli bakiye'ye tıklama
-        findViewById<TextView>(R.id.tv_balance_vadeli).setOnClickListener {
-            showBalanceDetails("Vadeli", vadeliBalance)
-        }
-    }
-    
-    private fun updateTime() {
-        val timeTextView = findViewById<TextView>(R.id.tv_time)
-        val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
-        timeTextView.text = currentTime
-    }
-    
-    private fun updateAccountInfo() {
-        // IBAN numaralarını güncelle
-        findViewById<TextView>(R.id.tv_iban_vadesiz).text = vadesizIban
-        findViewById<TextView>(R.id.tv_iban_vadeli).text = vadeliIban
-        
-        // Bakiye bilgilerini güncelle
-        findViewById<TextView>(R.id.tv_balance_vadesiz).text = vadesizBalance
-        findViewById<TextView>(R.id.tv_balance_vadeli).text = vadeliBalance
-    }
-    
-    private fun copyIbanToClipboard(iban: String, accountType: String) {
-        val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clipData = ClipData.newPlainText("IBAN", iban)
-        clipboardManager.setPrimaryClip(clipData)
-        
-        Toast.makeText(this, "$accountType IBAN kopyalandı", Toast.LENGTH_SHORT).show()
-    }
-    
-    private fun showBalanceDetails(accountType: String, balance: String) {
-        AlertDialog.Builder(this)
-            .setTitle("$accountType Hesap Detayları")
-            .setMessage("""
-                Hesap Türü: $accountType
-                Bakiye: $balance
-                IBAN: ${if (accountType == "Vadesiz") vadesizIban else vadeliIban}
-                
-                Bu hesap hakkında detaylı bilgi almak için müşteri hizmetlerini arayabilirsiniz.
-            """.trimIndent())
-            .setPositiveButton("Tamam") { dialog, _ ->
-                dialog.dismiss()
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    loadingIndicator.visibility = if (state.isLoading) View.VISIBLE else View.GONE
+
+                    state.accountData?.let { account ->
+                        // Veri geldiğinde kartı görünür yap
+                        accountCard.visibility = View.VISIBLE
+
+                        // Formatter ile para birimini düzgün göster
+                        val formatter = DecimalFormat("#,##0.00")
+                        val formattedBalance = formatter.format(account.balance)
+
+                        ibanTextView.text = account.iban
+                        balanceTextView.text = "$formattedBalance ₺"
+                    }
+
+                    state.error?.let {
+                        Toast.makeText(this@IbanInfoActivity, "Hata: $it", Toast.LENGTH_LONG).show()
+                        // Hata durumunda kartı gizle veya hata mesajı göster
+                        accountCard.visibility = View.INVISIBLE
+                    }
+                }
             }
-            .show()
+        }
     }
-} 
+
+    private fun updateTime() {
+        timeTextView.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+    }
+}

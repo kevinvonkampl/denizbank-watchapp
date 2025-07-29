@@ -54,4 +54,8 @@
     <color name="dark_card_background">#2A2A2A</color>
     <color name="dark_grey_card">#3A3A3A</color>
     <color name="pay_button_blue">#2196F3</color>
+
+
+    <color name="green">#4CAF50</color>
+    <color name="red">#F44336</color>
 </resources> 
