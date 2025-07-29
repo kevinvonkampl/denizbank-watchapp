@@ -31,4 +31,12 @@
     <!-- Çağrı Merkezi Ekranı Renkleri -->
     <color name="call_center_red">#F44336</color>
     <color name="call_button_green">#4CAF50</color>
+    
+    <!-- Kredi Kartları Ekranı Renkleri -->
+    <color name="mastercard_red">#EB001B</color>
+    <color name="mastercard_orange">#F79E1B</color>
+    <color name="chip_gold">#FFD700</color>
+    
+    <!-- Para Çek Ekranı Renkleri -->
+    <color name="withdraw_button_green">#4CAF50</color>
 </resources> 

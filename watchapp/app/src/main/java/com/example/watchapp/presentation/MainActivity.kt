@@ -30,7 +30,8 @@ class MainActivity : ComponentActivity() {
         
         // Kredi Kartlarım
         findViewById<CardView>(R.id.card_kredi_kartlarim).setOnClickListener {
-            showToast("Kredi Kartlarım seçildi")
+            val intent = Intent(this, CreditCardsActivity::class.java)
+            startActivity(intent)
         }
         
         // Borsa
@@ -40,7 +41,8 @@ class MainActivity : ComponentActivity() {
         
         // Para Çek
         findViewById<CardView>(R.id.card_para_cek).setOnClickListener {
-            showToast("Para Çek seçildi")
+            val intent = Intent(this, WithdrawMoneyActivity::class.java)
+            startActivity(intent)
         }
         
         // Döviz Kuru
