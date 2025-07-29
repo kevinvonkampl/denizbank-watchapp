@@ -68,6 +68,16 @@
             android:exported="false"
             android:theme="@android:style/Theme.DeviceDefault" />
 
+        <activity
+            android:name=".presentation.BorsaActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.DeviceDefault" />
+
+        <activity
+            android:name=".presentation.DovizKuruActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.DeviceDefault" />
+
     </application>
 
 </manifest>
