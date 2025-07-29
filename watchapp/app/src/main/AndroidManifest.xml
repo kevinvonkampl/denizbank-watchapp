@@ -78,6 +78,16 @@
             android:exported="false"
             android:theme="@android:style/Theme.DeviceDefault" />
 
+        <activity
+            android:name=".presentation.KriptoActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.DeviceDefault" />
+
+        <activity
+            android:name=".presentation.BillPaymentActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.DeviceDefault" />
+
     </application>
 
 </manifest>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="bill_types">
+        <item>Elektrik Faturası</item>
+        <item>Su Faturası</item>
+        <item>Doğalgaz Faturası</item>
+        <item>Telefon Faturası</item>
+        <item>İnternet Faturası</item>
+        <item>TV Faturası</item>
+        <item>Kredi Kartı</item>
+        <item>Kredi Taksiti</item>
+        <item>Vergi</item>
+        <item>Diğer</item>
+    </string-array>
+</resources> 

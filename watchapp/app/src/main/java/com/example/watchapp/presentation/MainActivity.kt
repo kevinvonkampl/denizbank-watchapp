@@ -23,9 +23,10 @@ class MainActivity : ComponentActivity() {
     }
     
     private fun setupMenuClickListeners() {
-        // Hesabım
-        findViewById<CardView>(R.id.card_hesabim).setOnClickListener {
-            showToast("Hesabım seçildi")
+        // Kripto
+        findViewById<CardView>(R.id.card_kripto).setOnClickListener {
+            val intent = Intent(this, KriptoActivity::class.java)
+            startActivity(intent)
         }
         
         // Kredi Kartlarım
@@ -73,6 +74,12 @@ class MainActivity : ComponentActivity() {
         // IBAN Bilgileri
         findViewById<CardView>(R.id.card_iban_bilgileri).setOnClickListener {
             val intent = Intent(this, IbanInfoActivity::class.java)
+            startActivity(intent)
+        }
+        
+        // Fatura Ödeme
+        findViewById<CardView>(R.id.card_fatura_odeme).setOnClickListener {
+            val intent = Intent(this, BillPaymentActivity::class.java)
             startActivity(intent)
         }
     }

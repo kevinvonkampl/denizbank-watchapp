@@ -29,13 +29,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="3"
-            android:rowCount="3"
+            android:rowCount="4"
             android:alignmentMode="alignMargins"
             android:useDefaultMargins="true">
 
-            <!-- Hesabım -->
+            <!-- Kripto -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/card_hesabim"
+                android:id="@+id/card_kripto"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:layout_columnWeight="1"
@@ -56,14 +56,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🧾"
+                        android:text="₿"
                         android:textSize="24sp"
                         android:gravity="center" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/menu_hesabim"
+                        android:text="@string/menu_kripto"
                         android:textSize="9sp"
                         android:textColor="@color/text_color"
                         android:gravity="center"
@@ -392,6 +392,47 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/menu_iban_bilgileri"
+                        android:textSize="9sp"
+                        android:textColor="@color/text_color"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Fatura Ödeme -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_fatura_odeme"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_columnWeight="1"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/fatura_odeme_color"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📄"
+                        android:textSize="24sp"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/menu_fatura_odeme"
                         android:textSize="9sp"
                         android:textColor="@color/text_color"
                         android:gravity="center"
