@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background_color"
+    android:background="@color/dark_background"
     android:padding="8dp">
 
     <!-- Başlık -->
@@ -15,7 +15,7 @@
         android:text="DenizBank"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/primary_color"
+        android:textColor="@color/white"
         android:gravity="center"
         android:layout_marginBottom="8dp" />
 
@@ -65,7 +65,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/menu_kripto"
                         android:textSize="9sp"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/white"
                         android:gravity="center"
                         android:maxLines="2"
                         android:layout_marginTop="2dp" />
@@ -106,7 +106,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/menu_kredi_kartlarim"
                         android:textSize="9sp"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/white"
                         android:gravity="center"
                         android:maxLines="2"
                         android:layout_marginTop="2dp" />
@@ -147,7 +147,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/menu_borsa"
                         android:textSize="9sp"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/white"
                         android:gravity="center"
                         android:maxLines="2"
                         android:layout_marginTop="2dp" />
@@ -188,7 +188,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/menu_para_cek"
                         android:textSize="9sp"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/white"
                         android:gravity="center"
                         android:maxLines="2"
                         android:layout_marginTop="2dp" />
@@ -229,7 +229,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/menu_doviz_kuru"
                         android:textSize="9sp"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/white"
                         android:gravity="center"
                         android:maxLines="2"
                         android:layout_marginTop="2dp" />
@@ -270,7 +270,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/menu_en_yakin_atm"
                         android:textSize="9sp"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/white"
                         android:gravity="center"
                         android:maxLines="2"
                         android:layout_marginTop="2dp" />
@@ -311,7 +311,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/menu_cagri_merkezi"
                         android:textSize="9sp"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/white"
                         android:gravity="center"
                         android:maxLines="2"
                         android:layout_marginTop="2dp" />
@@ -352,7 +352,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/menu_doviz_al_sat"
                         android:textSize="9sp"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/white"
                         android:gravity="center"
                         android:maxLines="2"
                         android:layout_marginTop="2dp" />
@@ -393,7 +393,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/menu_iban_bilgileri"
                         android:textSize="9sp"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/white"
                         android:gravity="center"
                         android:maxLines="2"
                         android:layout_marginTop="2dp" />
@@ -434,7 +434,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/menu_fatura_odeme"
                         android:textSize="9sp"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/white"
                         android:gravity="center"
                         android:maxLines="2"
                         android:layout_marginTop="2dp" />
