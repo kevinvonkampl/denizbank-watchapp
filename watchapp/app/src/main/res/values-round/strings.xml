@@ -2,7 +2,7 @@
     <string name="hello_world">From the Round world,\nHello, %1$s!</string>
     
     <!-- Ana Sayfa Menü Öğeleri -->
-    <string name="menu_hesabim">Hesabım</string>
+    <string name="menu_kripto">Kripto</string>
     <string name="menu_kredi_kartlarim">Kredi Kartlarım</string>
     <string name="menu_borsa">Borsa</string>
     <string name="menu_para_cek">Para Çek</string>

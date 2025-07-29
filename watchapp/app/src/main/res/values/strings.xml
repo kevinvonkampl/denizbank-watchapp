@@ -7,7 +7,7 @@
     <string name="hello_world">From the Square world,\nHello, %1$s!</string>
     
     <!-- Ana Sayfa Menü Öğeleri -->
-    <string name="menu_hesabim">Hesabım</string>
+    <string name="menu_kripto">Kripto</string>
     <string name="menu_kredi_kartlarim">Kredi Kartlarım</string>
     <string name="menu_borsa">Borsa</string>
     <string name="menu_para_cek">Para Çek</string>
@@ -16,4 +16,5 @@
     <string name="menu_cagri_merkezi">Çağrı Merkezi</string>
     <string name="menu_doviz_al_sat">Döviz Al-Sat</string>
     <string name="menu_iban_bilgileri">IBAN Bilgileri</string>
+    <string name="menu_fatura_odeme">Fatura Ödeme</string>
 </resources>

@@ -18,6 +18,7 @@
     <color name="cagri_merkezi_color">#FCE4EC</color>
     <color name="doviz_al_sat_color">#E0F2F1</color>
     <color name="iban_bilgileri_color">#E8EAF6</color>
+    <color name="fatura_odeme_color">#E8F5E8</color>
     
     <!-- Döviz Al-Sat Ekranı Renkleri -->
     <color name="dark_grey">#2A2A2A</color>
@@ -27,4 +28,30 @@
     
     <!-- IBAN Bilgileri Ekranı Renkleri -->
     <color name="qr_code_red">#F44336</color>
+    
+    <!-- Çağrı Merkezi Ekranı Renkleri -->
+    <color name="call_center_red">#F44336</color>
+    <color name="call_button_green">#4CAF50</color>
+    
+    <!-- Kredi Kartları Ekranı Renkleri -->
+    <color name="mastercard_red">#EB001B</color>
+    <color name="mastercard_orange">#F79E1B</color>
+    <color name="chip_gold">#FFD700</color>
+    
+    <!-- Para Çek Ekranı Renkleri -->
+    <color name="withdraw_button_green">#4CAF50</color>
+    
+    <!-- En Yakın ATM Ekranı Renkleri -->
+    <color name="light_gray_background">#F5F5F5</color>
+    <color name="atm_icon_red">#F44336</color>
+    <color name="selection_blue">#2196F3</color>
+    
+    <!-- Fatura Ödeme Ekranı Renkleri -->
+    <color name="bill_payment_color">#4CAF50</color>
+    
+    <!-- Koyu Tema Renkleri -->
+    <color name="dark_background">#1A1A1A</color>
+    <color name="dark_card_background">#2A2A2A</color>
+    <color name="dark_grey_card">#3A3A3A</color>
+    <color name="pay_button_blue">#2196F3</color>
 </resources> 

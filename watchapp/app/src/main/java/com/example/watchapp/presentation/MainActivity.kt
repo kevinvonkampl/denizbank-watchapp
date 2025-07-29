@@ -23,39 +23,46 @@ class MainActivity : ComponentActivity() {
     }
     
     private fun setupMenuClickListeners() {
-        // Hesabım
-        findViewById<CardView>(R.id.card_hesabim).setOnClickListener {
-            showToast("Hesabım seçildi")
+        // Kripto
+        findViewById<CardView>(R.id.card_kripto).setOnClickListener {
+            val intent = Intent(this, KriptoActivity::class.java)
+            startActivity(intent)
         }
         
         // Kredi Kartlarım
         findViewById<CardView>(R.id.card_kredi_kartlarim).setOnClickListener {
-            showToast("Kredi Kartlarım seçildi")
+            val intent = Intent(this, CreditCardsActivity::class.java)
+            startActivity(intent)
         }
         
         // Borsa
         findViewById<CardView>(R.id.card_borsa).setOnClickListener {
-            showToast("Borsa seçildi")
+            val intent = Intent(this, BorsaActivity::class.java)
+            startActivity(intent)
         }
         
         // Para Çek
         findViewById<CardView>(R.id.card_para_cek).setOnClickListener {
-            showToast("Para Çek seçildi")
+            val intent = Intent(this, WithdrawMoneyActivity::class.java)
+            startActivity(intent)
         }
         
         // Döviz Kuru
         findViewById<CardView>(R.id.card_doviz_kuru).setOnClickListener {
-            showToast("Döviz Kuru seçildi")
+            val intent = Intent(this, DovizKuruActivity::class.java)
+            startActivity(intent)
         }
         
         // En Yakın ATM
         findViewById<CardView>(R.id.card_en_yakin_atm).setOnClickListener {
-            showToast("En Yakın ATM seçildi")
+            val intent = Intent(this, NearestAtmActivity::class.java)
+            startActivity(intent)
         }
         
         // Çağrı Merkezi
         findViewById<CardView>(R.id.card_cagri_merkezi).setOnClickListener {
-            showToast("Çağrı Merkezi seçildi")
+            val intent = Intent(this, CallCenterActivity::class.java)
+            startActivity(intent)
         }
         
         // Döviz Al-Sat
@@ -67,6 +74,12 @@ class MainActivity : ComponentActivity() {
         // IBAN Bilgileri
         findViewById<CardView>(R.id.card_iban_bilgileri).setOnClickListener {
             val intent = Intent(this, IbanInfoActivity::class.java)
+            startActivity(intent)
+        }
+        
+        // Fatura Ödeme
+        findViewById<CardView>(R.id.card_fatura_odeme).setOnClickListener {
+            val intent = Intent(this, BillPaymentActivity::class.java)
             startActivity(intent)
         }
     }
