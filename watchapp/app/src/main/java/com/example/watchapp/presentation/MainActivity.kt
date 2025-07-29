@@ -8,18 +8,28 @@ package com.example.watchapp.presentation
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.cardview.widget.CardView
 import com.example.watchapp.R
 
 class MainActivity : ComponentActivity() {
+    
+    private lateinit var textViewLogout: TextView
+    
+    companion object {
+        private const val PREFS_NAME = "LoginPrefs"
+        private const val KEY_IS_LOGGED_IN = "isLoggedIn"
+    }
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         
-        // Menü kartlarına tıklama olaylarını ekle
+        initializeViews()
         setupMenuClickListeners()
+        setupLogoutListener()
     }
     
     private fun setupMenuClickListeners() {
@@ -82,6 +92,30 @@ class MainActivity : ComponentActivity() {
             val intent = Intent(this, BillPaymentActivity::class.java)
             startActivity(intent)
         }
+    }
+    
+    private fun initializeViews() {
+        textViewLogout = findViewById(R.id.tv_logout)
+    }
+    
+    private fun setupLogoutListener() {
+        textViewLogout.setOnClickListener {
+            // Giriş durumunu temizle
+            clearLoginStatus()
+            
+            // Hoş geldiniz ekranına geri dön
+            val intent = Intent(this, WelcomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+        }
+    }
+    
+    private fun clearLoginStatus() {
+        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.putBoolean(KEY_IS_LOGGED_IN, false)
+        editor.apply()
     }
     
     private fun showToast(message: String) {

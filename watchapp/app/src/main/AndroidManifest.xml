@@ -27,7 +27,7 @@
             android:value="true" />
 
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".presentation.WelcomeActivity"
             android:exported="true"
             android:taskAffinity=""
             android:theme="@style/MainActivityTheme.Starting">
@@ -37,6 +37,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".presentation.MainActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.DeviceDefault" />
 
         <activity
             android:name=".presentation.CurrencyBuySellActivity"
@@ -85,6 +90,11 @@
 
         <activity
             android:name=".presentation.BillPaymentActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.DeviceDefault" />
+
+        <activity
+            android:name=".presentation.QrLoginActivity"
             android:exported="false"
             android:theme="@android:style/Theme.DeviceDefault" />
 
