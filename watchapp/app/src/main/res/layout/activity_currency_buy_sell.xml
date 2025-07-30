@@ -121,25 +121,24 @@
                     android:layout_height="60dp"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
+                    android:background="@drawable/button_background_rounded"
                     android:backgroundTint="@color/buy_button_color"
                     android:text="Buy"
-                    android:textColor="@color/white"
-                    app:cornerRadius="30dp" />
+                    android:textColor="@color/white" />
                 <Button
                     android:id="@+id/btn_sell"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
+                    android:background="@drawable/button_background_rounded"
                     android:backgroundTint="@color/sell_button_color"
                     android:text="Sell"
-                    android:textColor="@color/white"
-                    app:cornerRadius="30dp" />
+                    android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- ProgressBar, NestedScrollView'ın DIŞINDA olmalı ki kaydırmadan etkilenmesin -->
     <ProgressBar
         android:id="@+id/loading_indicator"
         android:layout_width="wrap_content"

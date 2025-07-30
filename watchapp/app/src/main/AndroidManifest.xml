@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-feature android:name="android.hardware.type.watch" />
 
     <application
@@ -10,18 +11,14 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.DeviceDefault">
+        android:theme="@style/Theme.WatchApp"
+        android:networkSecurityConfig="@xml/network_security_config"
+        tools:ignore="ExtraText">
+
         <uses-library
             android:name="com.google.android.wearable"
             android:required="true" />
-        <uses-library
-            android:name="wear-sdk"
-            android:required="false" />
 
-        <!--
-               Set to true if your app is Standalone, that is, it does not require the handheld
-               app to run.
-        -->
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
@@ -29,74 +26,28 @@
         <activity
             android:name=".presentation.WelcomeActivity"
             android:exported="true"
-            android:taskAffinity=""
-            android:theme="@style/MainActivityTheme.Starting">
+            android:taskAffinity="">
+            <!-- 2. ÖZEL TEMA KALDIRILDI -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".presentation.MainActivity"
-            android:exported="false"
-            android:theme="@android:style/Theme.DeviceDefault" />
-
-        <activity
-            android:name=".presentation.CurrencyBuySellActivity"
-            android:exported="false"
-            android:theme="@android:style/Theme.DeviceDefault" />
-
-        <activity
-            android:name=".presentation.IbanInfoActivity"
-            android:exported="false"
-            android:theme="@android:style/Theme.DeviceDefault" />
-
-        <activity
-            android:name=".presentation.CallCenterActivity"
-            android:exported="false"
-            android:theme="@android:style/Theme.DeviceDefault" />
-
-        <activity
-            android:name=".presentation.CreditCardsActivity"
-            android:exported="false"
-            android:theme="@android:style/Theme.DeviceDefault" />
-
-        <activity
-            android:name=".presentation.WithdrawMoneyActivity"
-            android:exported="false"
-            android:theme="@android:style/Theme.DeviceDefault" />
-
-        <activity
-            android:name=".presentation.NearestAtmActivity"
-            android:exported="false"
-            android:theme="@android:style/Theme.DeviceDefault" />
-
-        <activity
-            android:name=".presentation.BorsaActivity"
-            android:exported="false"
-            android:theme="@android:style/Theme.DeviceDefault" />
-
-        <activity
-            android:name=".presentation.DovizKuruActivity"
-            android:exported="false"
-            android:theme="@android:style/Theme.DeviceDefault" />
-
-        <activity
-            android:name=".presentation.KriptoActivity"
-            android:exported="false"
-            android:theme="@android:style/Theme.DeviceDefault" />
-
-        <activity
-            android:name=".presentation.BillPaymentActivity"
-            android:exported="false"
-            android:theme="@android:style/Theme.DeviceDefault" />
-
-        <activity
-            android:name=".presentation.QrLoginActivity"
-            android:exported="false"
-            android:theme="@android:style/Theme.DeviceDefault" />
+        <!-- 3. TÜM DİĞER ACTIVITY'LERDEN GEREKSİZ TEMA TANIMLARI KALDIRILDI -->
+        <activity android:name=".presentation.MainActivity" android:exported="false" />
+        <activity android:name=".presentation.CurrencyBuySellActivity" android:exported="false" />
+        <activity android:name=".presentation.IbanInfoActivity" android:exported="false" />
+        <activity android:name=".presentation.CallCenterActivity" android:exported="false" />
+        <activity android:name=".presentation.CreditCardsActivity" android:exported="false" />
+        <activity android:name=".presentation.WithdrawMoneyActivity" android:exported="false" />
+        <activity android:name=".presentation.NearestAtmActivity" android:exported="false" />
+        <activity android:name=".presentation.BorsaActivity" android:exported="false" />
+        <activity android:name=".presentation.DovizKuruActivity" android:exported="false" />
+        <activity android:name=".presentation.KriptoActivity" android:exported="false" />
+        <activity android:name=".presentation.BillPaymentActivity" android:exported="false" />
+        <activity android:name=".presentation.QrLoginActivity" android:exported="false" />
+        <activity android:name=".presentation.AppointmentActivity" android:exported="false" />
 
     </application>
 

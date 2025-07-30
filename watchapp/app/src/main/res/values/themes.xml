@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Bu, uygulamamızın tek ve ana temasıdır.
+      Tüm Activity'ler bu temayı miras alacaktır.
+      parent="android:Theme.DeviceDefault" sayesinde tüm bileşenler
+      varsayılan olarak saate uygun görünecektir.
+    -->
+    <style name="Theme.WatchApp" parent="android:Theme.DeviceDefault" />
+
+</resources>

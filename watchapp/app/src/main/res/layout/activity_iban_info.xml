@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_background"
+    android:background="@color/black"
     tools:context=".presentation.IbanInfoActivity">
 
-    <!-- Bu ScrollView, içeriğin yuvarlak ekranda kaydırılabilmesini sağlar -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -56,7 +55,7 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="16dp"/>
 
-            <!-- Vadesiz Hesap Kartı -->
+            <!-- Hesap Kartı -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/account_card_container"
                 android:layout_width="match_parent"
@@ -125,7 +124,7 @@
                             android:id="@+id/iv_qr_code"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:src="@drawable/ic_qr_code_placeholder"/> <!-- Placeholder ikon -->
+                            android:src="@drawable/ic_qr_code_placeholder"/>
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

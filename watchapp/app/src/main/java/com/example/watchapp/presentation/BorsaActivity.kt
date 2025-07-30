@@ -21,6 +21,7 @@ import com.example.watchapp.presentation.ui.market.MarketViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.min
 
 class BorsaActivity : AppCompatActivity() {
 
@@ -83,19 +84,21 @@ class BorsaActivity : AppCompatActivity() {
     }
 
     private fun updateUiWithStockData(stocks: List<StockDTO>) {
-        val count = minOf(stocks.size, stockCardHolders.size)
+        val count = min(stocks.size, stockCardHolders.size)
         for (i in 0 until count) {
             val stockData = stocks[i]
             val holder = stockCardHolders[i]
             val isChangePositive = stockData.change >= 0
 
+            val changePercentage = if (stockData.price > 0) (stockData.change / stockData.price) * 100 else 0.0
+
             holder.info.text = stockData.symbol
-            holder.subInfo.text = String.format("%.2f%%", (stockData.change / stockData.price) * 100) // Yüzdelik değişim
+            holder.subInfo.text = String.format("%.2f%%", changePercentage)
             holder.price.text = String.format("$%.2f", stockData.price)
             holder.change.text = String.format("%.2f", stockData.change)
 
             val color = if (isChangePositive) getColor(R.color.green) else getColor(R.color.red)
-            holder.subInfo.setTextColor(color) // Yüzdelik değişimin rengini ayarla
+            holder.subInfo.setTextColor(color)
             holder.change.setTextColor(color)
             holder.graph.setImageResource(if (isChangePositive) R.drawable.ic_graph_up else R.drawable.ic_graph_down)
 

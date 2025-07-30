@@ -18,6 +18,7 @@ import com.example.watchapp.presentation.ui.market.MarketViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.min
 import kotlin.random.Random
 
 class DovizKuruActivity : AppCompatActivity() {
@@ -45,7 +46,6 @@ class DovizKuruActivity : AppCompatActivity() {
         timeTextView = findViewById(R.id.tv_time)
         currencyListContainer = findViewById(R.id.currency_list_container)
 
-        // XML'deki 3 kartın elemanlarını bulup listeye ekliyoruz
         currencyCardHolders.add(CurrencyCardHolder(
             flag = findViewById(R.id.currency_flag_1),
             code = findViewById(R.id.currency_code_1),
@@ -87,28 +87,26 @@ class DovizKuruActivity : AppCompatActivity() {
     }
 
     private fun updateUiWithRates(rates: List<ExchangeRateDTO>) {
-        val count = minOf(rates.size, currencyCardHolders.size)
+        val count = min(rates.size, currencyCardHolders.size)
         for (i in 0 until count) {
             val rateData = rates[i]
             val holder = currencyCardHolders[i]
 
-            // API'den değişim oranı gelmediği için simüle ediyoruz
             val simulatedChange = Random.nextDouble(-2.0, 2.0)
             val isPositive = simulatedChange >= 0
+            val code = rateData.currencyPair.substringBefore("/")
 
-            // Verileri ilgili UI elemanlarına yaz
-            holder.code.text = rateData.currencyPair.substringBefore("/")
+            holder.code.text = code
             holder.rate.text = String.format("%.4f", rateData.rate)
             holder.change.text = String.format("%.2f%%", simulatedChange)
 
-            // Bayrağı ayarla
-            when (rateData.currencyPair) {
-                "EUR/USD" -> holder.flag.setImageResource(R.drawable.ic_flag_eur)
-                "GBP/USD" -> holder.flag.setImageResource(R.drawable.ic_flag_gbp)
-                else -> holder.flag.setImageResource(R.drawable.ic_flag_usd) // Varsayılan
+            when (code) {
+                "EUR" -> holder.flag.setImageResource(R.drawable.ic_flag_eur)
+                "GBP" -> holder.flag.setImageResource(R.drawable.ic_flag_gbp)
+                "JPY" -> holder.flag.setImageResource(R.drawable.ic_flag_usd) // Placeholder
+                else -> holder.flag.setImageResource(R.drawable.ic_flag_usd)
             }
 
-            // Renkleri ayarla
             val color = if (isPositive) getColor(R.color.green) else getColor(R.color.red)
             holder.change.setTextColor(color)
         }
@@ -118,7 +116,6 @@ class DovizKuruActivity : AppCompatActivity() {
         timeTextView.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
     }
 
-    // Her bir kartın UI elemanlarını tutan basit bir data class
     data class CurrencyCardHolder(
         val flag: ImageView,
         val code: TextView,

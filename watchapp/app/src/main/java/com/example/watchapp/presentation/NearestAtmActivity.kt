@@ -1,6 +1,6 @@
 package com.example.watchapp.presentation
 
-// SupportViewModel'i kullanarak dinamik hale getirilmiş hali
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
@@ -11,16 +11,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.wear.widget.WearableLinearLayoutManager
+import androidx.wear.widget.WearableRecyclerView
 import com.example.watchapp.R
-import com.example.watchapp.presentation.adapter.AtmAdapter // Yeni bir adapter gerekecek
+import com.example.watchapp.presentation.adapter.AtmAdapter
 import com.example.watchapp.presentation.ui.support.SupportViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class NearestAtmActivity : AppCompatActivity() {
     private val viewModel: SupportViewModel by viewModels()
-    private lateinit var atmRecyclerView: RecyclerView
+    private lateinit var atmRecyclerView: WearableRecyclerView
     private lateinit var atmAdapter: AtmAdapter
     private lateinit var loadingIndicator: ProgressBar
 
@@ -41,10 +43,18 @@ class NearestAtmActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         atmAdapter = AtmAdapter { atm ->
-            Toast.makeText(this, "${atm.name} seçildi", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, AppointmentActivity::class.java).apply {
+                putExtra("ATM_NAME", atm.name)
+                putExtra("ATM_ADDRESS", atm.address)
+            }
+            startActivity(intent)
         }
-        atmRecyclerView.adapter = atmAdapter
-        atmRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        atmRecyclerView.apply {
+            isEdgeItemsCenteringEnabled = true
+            layoutManager = WearableLinearLayoutManager(this@NearestAtmActivity)
+            adapter = atmAdapter
+        }
     }
 
     private fun observeViewModel() {

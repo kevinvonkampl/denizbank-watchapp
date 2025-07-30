@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -21,8 +22,9 @@ import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.min
 
-class KriptoActivity : AppCompatActivity() {
+class KriptoActivity : ComponentActivity() {
 
     private val viewModel: MarketViewModel by viewModels()
     private lateinit var loadingIndicator: ProgressBar
@@ -47,7 +49,6 @@ class KriptoActivity : AppCompatActivity() {
         timeTextView = findViewById(R.id.tv_time)
         cryptoListContainer = findViewById(R.id.crypto_list_container)
 
-        // XML'deki 2 kartın elemanlarını bulup listeye ekliyoruz
         cryptoCardHolders.add(CryptoCardHolder(
             card = findViewById(R.id.card_crypto_1),
             info = findViewById(R.id.crypto_info_1),
@@ -87,28 +88,23 @@ class KriptoActivity : AppCompatActivity() {
     }
 
     private fun updateUiWithCryptoData(cryptos: List<CryptoDTO>) {
-        val count = minOf(cryptos.size, cryptoCardHolders.size)
+        val count = min(cryptos.size, cryptoCardHolders.size)
 
         for (i in 0 until count) {
             val cryptoData = cryptos[i]
             val holder = cryptoCardHolders[i]
             val isPositive = cryptoData.priceChangePercentage24h >= 0
-
-            // Para formatlayıcı
             val priceFormatter = DecimalFormat("$#,##0.00")
 
-            // Verileri UI elemanlarına yaz
             holder.info.text = "${cryptoData.symbol.uppercase()} ${String.format("%.2f%%", cryptoData.priceChangePercentage24h)}"
-            holder.subInfo.text = cryptoData.name // Alt bilgi olarak tam adını yazalım
+            holder.subInfo.text = cryptoData.name
             holder.price.text = priceFormatter.format(cryptoData.currentPrice)
-            holder.change.text = String.format("%.2f", cryptoData.currentPrice * (cryptoData.priceChangePercentage24h / 100)) // Günlük Fiyat Değişimi
+            holder.change.text = String.format("%.2f", cryptoData.currentPrice * (cryptoData.priceChangePercentage24h / 100))
 
-            // Renk ve ikonu ayarla
             val color = if (isPositive) getColor(R.color.green) else getColor(R.color.red)
-            holder.info.setTextColor(color) // Yüzdelik değişimin rengini ana bilgiye yansıt
+            holder.info.setTextColor(color)
             holder.graph.setImageResource(if (isPositive) R.drawable.ic_graph_up else R.drawable.ic_graph_down)
 
-            // Tıklama olayını ayarla
             holder.card.setOnClickListener {
                 showCryptoDetails(cryptoData)
             }
@@ -134,7 +130,6 @@ class KriptoActivity : AppCompatActivity() {
             .show()
     }
 
-    // Her bir kartın UI elemanlarını tutan basit bir data class
     data class CryptoCardHolder(
         val card: CardView,
         val info: TextView,
