@@ -1,125 +1,476 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    android:padding="5dp"
-    tools:context=".presentation.MainActivity">
+    android:orientation="vertical"
+    android:background="@color/dark_background"
+    android:padding="8dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!-- Başlık ve Çıkış Butonu -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_boxedEdges="all">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="DenizBank"
-            android:textColor="@color/white"
-            android:textSize="22sp"
+            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="10dp"/>
+            android:textColor="@color/white"
+            android:gravity="center" />
 
-        <!-- ÇIKIŞ BUTONU (YENİ EKLENDİ) -->
         <TextView
             android:id="@+id/tv_logout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Çıkış"
-            android:textColor="@color/light_grey"
             android:textSize="12sp"
-            android:padding="8dp"
+            android:textColor="@color/light_grey"
             android:clickable="true"
             android:focusable="true"
             android:background="?android:attr/selectableItemBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="5dp"/>
+            android:padding="8dp"
+            android:layout_marginStart="16dp" />
 
-        <!-- Butonların referansları Flow helper'ına veriliyor -->
-        <androidx.constraintlayout.helper.widget.Flow
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:constraint_referenced_ids="card_kripto, card_kredi_kartlarim, card_borsa, card_para_cek, card_doviz_kuru, card_en_yakin_atm, card_cagri_merkezi, card_doviz_al_sat, card_iban_bilgileri, card_fatura_odeme"
-            app:flow_wrapMode="aligned"
-            app:flow_maxElementsWrap="3"
-            app:flow_horizontalGap="4dp"
-            app:flow_verticalGap="4dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_title"
-            app:layout_constraintBottom_toTopOf="@id/tv_logout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"/>
+    </LinearLayout>
 
-        <!-- MENÜ BUTONLARI (DEĞİŞİKLİK YOK) -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_kripto"
-            style="@style/MainMenuCard">
-            <!-- ... içerik ... -->
-        </androidx.cardview.widget.CardView>
+    <!-- Grid Layout için ScrollView -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_kredi_kartlarim"
-            style="@style/MainMenuCard">
-            <!-- ... içerik ... -->
-        </androidx.cardview.widget.CardView>
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:rowCount="4"
+            android:alignmentMode="alignMargins"
+            android:useDefaultMargins="true">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_borsa"
-            style="@style/MainMenuCard">
-            <!-- ... içerik ... -->
-        </androidx.cardview.widget.CardView>
+            <!-- Kripto -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_kripto"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_columnWeight="1"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/hesabim_color"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_para_cek"
-            style="@style/MainMenuCard">
-            <!-- ... içerik ... -->
-        </androidx.cardview.widget.CardView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="6dp">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_doviz_kuru"
-            style="@style/MainMenuCard">
-            <!-- ... içerik ... -->
-        </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₿"
+                        android:textSize="24sp"
+                        android:gravity="center" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_en_yakin_atm"
-            style="@style/MainMenuCard">
-            <!-- ... içerik ... -->
-        </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/menu_kripto"
+                        android:textSize="9sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:layout_marginTop="2dp" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_cagri_merkezi"
-            style="@style/MainMenuCard">
-            <!-- ... içerik ... -->
-        </androidx.cardview.widget.CardView>
+                </LinearLayout>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_doviz_al_sat"
-            style="@style/MainMenuCard">
-            <!-- ... içerik ... -->
-        </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_iban_bilgileri"
-            style="@style/MainMenuCard">
-            <!-- ... içerik ... -->
-        </androidx.cardview.widget.CardView>
+            <!-- Kredi Kartlarım -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_kredi_kartlarim"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_columnWeight="1"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/kredi_kartlarim_color"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_fatura_odeme"
-            style="@style/MainMenuCard">
-            <!-- ... içerik ... -->
-        </androidx.cardview.widget.CardView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="6dp">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="💳"
+                        android:textSize="24sp"
+                        android:gravity="center" />
 
-</androidx.wear.widget.BoxInsetLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/menu_kredi_kartlarim"
+                        android:textSize="9sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Borsa -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_borsa"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_columnWeight="1"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/borsa_color"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📈"
+                        android:textSize="24sp"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/menu_borsa"
+                        android:textSize="9sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Para Çek -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_para_cek"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_columnWeight="1"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/para_cek_color"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="💸"
+                        android:textSize="24sp"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/menu_para_cek"
+                        android:textSize="9sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Döviz Kuru -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_doviz_kuru"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_columnWeight="1"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/doviz_kuru_color"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="💱"
+                        android:textSize="24sp"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/menu_doviz_kuru"
+                        android:textSize="9sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- En Yakın ATM -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_en_yakin_atm"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_columnWeight="1"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/en_yakin_atm_color"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📍"
+                        android:textSize="24sp"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/menu_en_yakin_atm"
+                        android:textSize="9sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Çağrı Merkezi -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_cagri_merkezi"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_columnWeight="1"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/cagri_merkezi_color"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📞"
+                        android:textSize="24sp"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/menu_cagri_merkezi"
+                        android:textSize="9sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Döviz Al-Sat -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_doviz_al_sat"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_columnWeight="1"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/doviz_al_sat_color"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔁"
+                        android:textSize="24sp"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/menu_doviz_al_sat"
+                        android:textSize="9sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- IBAN Bilgileri -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_iban_bilgileri"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_columnWeight="1"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/iban_bilgileri_color"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🏦"
+                        android:textSize="24sp"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/menu_iban_bilgileri"
+                        android:textSize="9sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Fatura Ödeme -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_fatura_odeme"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_columnWeight="1"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="@color/fatura_odeme_color"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📄"
+                        android:textSize="24sp"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/menu_fatura_odeme"
+                        android:textSize="9sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        android:maxLines="2"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </GridLayout>
+
+    </ScrollView>
+
+</LinearLayout>
