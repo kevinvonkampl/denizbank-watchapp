@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -21,7 +22,7 @@ import java.util.*
 import kotlin.math.min
 import kotlin.random.Random
 
-class DovizKuruActivity : AppCompatActivity() {
+class DovizKuruActivity : ComponentActivity() {
 
     private val viewModel: MarketViewModel by viewModels()
     private lateinit var loadingIndicator: ProgressBar

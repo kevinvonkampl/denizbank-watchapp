@@ -6,6 +6,6 @@
       parent="android:Theme.DeviceDefault" sayesinde tüm bileşenler
       varsayılan olarak saate uygun görünecektir.
     -->
-    <style name="Theme.WatchApp" parent="android:Theme.DeviceDefault" />
+<!--    <style name="Theme.WatchApp" parent="android:Theme.DeviceDefault" />-->
 
 </resources>

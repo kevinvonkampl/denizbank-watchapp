@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -45,7 +46,7 @@ class ExchangeActionViewModel : ViewModel() {
 }
 
 
-class CurrencyBuySellActivity : AppCompatActivity() {
+class CurrencyBuySellActivity : ComponentActivity() {
 
     // Veri çekmek için MarketViewModel
     private val marketViewModel: MarketViewModel by viewModels()

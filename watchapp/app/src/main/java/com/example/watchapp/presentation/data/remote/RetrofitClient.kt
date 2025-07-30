@@ -2,6 +2,7 @@ package com.example.watchapp.presentation.data.remote
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object RetrofitClient {
 
@@ -13,6 +14,7 @@ object RetrofitClient {
     val apiService: WatchAppApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(WatchAppApiService::class.java)

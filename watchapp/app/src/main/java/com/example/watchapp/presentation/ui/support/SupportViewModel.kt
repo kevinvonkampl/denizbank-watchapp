@@ -36,7 +36,7 @@ class SupportViewModel : ViewModel() {
         // 2. TEST AMAÇLI: Destek ekranı açılır açılmaz randevu oluşturma işlemini tetikle.
         // UYARI: Bu, bu ekran her açıldığında SMS göndermeye çalışacaktır.
         // Gerçek bir uygulamada bu bir butona bağlanmalıdır.
-        createAppointment()
+        //createAppointment()
     }
 
     fun fetchSupportData() {

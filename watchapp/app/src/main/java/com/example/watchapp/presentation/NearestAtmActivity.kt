@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -20,7 +21,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NearestAtmActivity : AppCompatActivity() {
+class NearestAtmActivity : ComponentActivity() {
     private val viewModel: SupportViewModel by viewModels()
     private lateinit var atmRecyclerView: WearableRecyclerView
     private lateinit var atmAdapter: AtmAdapter

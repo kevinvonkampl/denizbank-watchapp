@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -18,7 +19,7 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class IbanInfoActivity : AppCompatActivity() {
+class IbanInfoActivity : ComponentActivity() {
     private val viewModel: AccountViewModel by viewModels()
 
     // UI Elemanları
