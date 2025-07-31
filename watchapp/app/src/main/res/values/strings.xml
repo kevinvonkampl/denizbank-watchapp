@@ -12,7 +12,7 @@
     <string name="menu_borsa">Borsa</string>
     <string name="menu_para_cek">Para Çek</string>
     <string name="menu_doviz_kuru">Döviz Kuru</string>
-    <string name="menu_en_yakin_atm">En Yakın ATM</string>
+    <string name="menu_en_yakin_atm">En Yakın Şube</string>
     <string name="menu_cagri_merkezi">Çağrı Merkezi</string>
     <string name="menu_doviz_al_sat">Döviz Al-Sat</string>
     <string name="menu_iban_bilgileri">IBAN Bilgileri</string>

@@ -20,16 +20,6 @@ class WelcomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Giriş durumunu kontrol et
-        if (isLoggedIn()) {
-            // Zaten giriş yapılmışsa ana sayfaya geç
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
-            return
-        }
-        
         setContentView(R.layout.activity_welcome)
         
         initializeViews()

@@ -1,290 +1,287 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/dark_background"
-    android:padding="12dp">
+    android:fillViewport="true">
 
-    <!-- Üst Bilgi Çubuğu -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="16dp">
+        android:orientation="vertical"
+        android:padding="12dp">
 
-        <TextView
-            android:id="@+id/text_view_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Geri"
-            android:textSize="14sp"
-            android:textColor="@color/white"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?android:attr/selectableItemBackground"
-            android:padding="8dp" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/text_view_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="10:18"
-            android:textSize="14sp"
-            android:textColor="@color/white" />
-
-    </LinearLayout>
-
-    <!-- Ana İçerik Kartı -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        app:cardCornerRadius="16dp"
-        app:cardBackgroundColor="@color/dark_card_background"
-        app:cardElevation="8dp">
-
-        <ScrollView
+        <!-- Top Bar -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="8dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <!-- Sol - Back -->
+            <TextView
+                android:id="@+id/text_view_back"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="8dp"
+                android:text="Back"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
-                <!-- Fatura Kartları -->
-                <LinearLayout
-                    android:layout_width="match_parent"
+            <!-- Boş Alan -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <!-- Saat -->
+            <TextView
+                android:id="@+id/text_view_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="10:18"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <!-- Başlık -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Fatura Ödeme"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Fatura Kartları -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Telefon Faturası -->
+            <LinearLayout
+                android:id="@+id/layout_phone_bill"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@color/dark_grey_card"
+                android:layout_marginBottom="8dp"
+                android:padding="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="12dp">
+                    android:layout_weight="1"
+                    android:text="Telefon Faturası"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:gravity="start|center_vertical" />
 
-                    <!-- Telefon Faturası -->
-                    <LinearLayout
-                        android:id="@+id/layout_phone_bill"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:background="@color/dark_grey_card"
-                        android:layout_marginBottom="8dp"
-                        android:padding="12dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Telefon Faturası"
-                            android:textSize="14sp"
-                            android:textColor="@color/white"
-                            android:gravity="start|center_vertical" />
-
-                        <Button
-                            android:id="@+id/button_pay_phone"
-                            android:layout_width="60dp"
-                            android:layout_height="36dp"
-                            android:text="Öde"
-                            android:textSize="12sp"
-                            android:textColor="@color/white"
-                            android:background="@drawable/pay_button_background"
-                            android:layout_marginStart="8dp" />
-
-                    </LinearLayout>
-
-                    <!-- İnternet Faturası -->
-                    <LinearLayout
-                        android:id="@+id/layout_internet_bill"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:background="@color/dark_grey_card"
-                        android:layout_marginBottom="8dp"
-                        android:padding="12dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="İnternet"
-                            android:textSize="14sp"
-                            android:textColor="@color/white"
-                            android:gravity="start|center_vertical" />
-
-                        <Button
-                            android:id="@+id/button_pay_internet"
-                            android:layout_width="60dp"
-                            android:layout_height="36dp"
-                            android:text="Öde"
-                            android:textSize="12sp"
-                            android:textColor="@color/white"
-                            android:background="@drawable/pay_button_background"
-                            android:layout_marginStart="8dp" />
-
-                    </LinearLayout>
-
-                    <!-- Doğalgaz Faturası -->
-                    <LinearLayout
-                        android:id="@+id/layout_gas_bill"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:background="@color/dark_grey_card"
-                        android:layout_marginBottom="8dp"
-                        android:padding="12dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Doğalgaz"
-                            android:textSize="14sp"
-                            android:textColor="@color/white"
-                            android:gravity="start|center_vertical" />
-
-                        <Button
-                            android:id="@+id/button_pay_gas"
-                            android:layout_width="60dp"
-                            android:layout_height="36dp"
-                            android:text="Öde"
-                            android:textSize="12sp"
-                            android:textColor="@color/white"
-                            android:background="@drawable/pay_button_background"
-                            android:layout_marginStart="8dp" />
-
-                    </LinearLayout>
-
-                    <!-- Elektrik Faturası -->
-                    <LinearLayout
-                        android:id="@+id/layout_electricity_bill"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:background="@color/dark_grey_card"
-                        android:layout_marginBottom="8dp"
-                        android:padding="12dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Elektrik Faturası"
-                            android:textSize="14sp"
-                            android:textColor="@color/white"
-                            android:gravity="start|center_vertical" />
-
-                        <Button
-                            android:id="@+id/button_pay_electricity"
-                            android:layout_width="60dp"
-                            android:layout_height="36dp"
-                            android:text="Öde"
-                            android:textSize="12sp"
-                            android:textColor="@color/white"
-                            android:background="@drawable/pay_button_background"
-                            android:layout_marginStart="8dp" />
-
-                    </LinearLayout>
-
-                    <!-- Su Faturası -->
-                    <LinearLayout
-                        android:id="@+id/layout_water_bill"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:background="@color/dark_grey_card"
-                        android:layout_marginBottom="8dp"
-                        android:padding="12dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Su Faturası"
-                            android:textSize="14sp"
-                            android:textColor="@color/white"
-                            android:gravity="start|center_vertical" />
-
-                        <Button
-                            android:id="@+id/button_pay_water"
-                            android:layout_width="60dp"
-                            android:layout_height="36dp"
-                            android:text="Öde"
-                            android:textSize="12sp"
-                            android:textColor="@color/white"
-                            android:background="@drawable/pay_button_background"
-                            android:layout_marginStart="8dp" />
-
-                    </LinearLayout>
-
-                    <!-- TV Faturası -->
-                    <LinearLayout
-                        android:id="@+id/layout_tv_bill"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:background="@color/dark_grey_card"
-                        android:layout_marginBottom="8dp"
-                        android:padding="12dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="TV Faturası"
-                            android:textSize="14sp"
-                            android:textColor="@color/white"
-                            android:gravity="start|center_vertical" />
-
-                        <Button
-                            android:id="@+id/button_pay_tv"
-                            android:layout_width="60dp"
-                            android:layout_height="36dp"
-                            android:text="Öde"
-                            android:textSize="12sp"
-                            android:textColor="@color/white"
-                            android:background="@drawable/pay_button_background"
-                            android:layout_marginStart="8dp" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
+                <Button
+                    android:id="@+id/button_pay_phone"
+                    android:layout_width="60dp"
+                    android:layout_height="36dp"
+                    android:text="Öde"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/pay_button_background"
+                    android:layout_marginStart="8dp" />
 
             </LinearLayout>
 
-        </ScrollView>
+            <!-- İnternet Faturası -->
+            <LinearLayout
+                android:id="@+id/layout_internet_bill"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@color/dark_grey_card"
+                android:layout_marginBottom="8dp"
+                android:padding="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
 
-    </androidx.cardview.widget.CardView>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="İnternet"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:gravity="start|center_vertical" />
 
-</LinearLayout> 
+                <Button
+                    android:id="@+id/button_pay_internet"
+                    android:layout_width="60dp"
+                    android:layout_height="36dp"
+                    android:text="Öde"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/pay_button_background"
+                    android:layout_marginStart="8dp" />
+
+            </LinearLayout>
+
+            <!-- Doğalgaz Faturası -->
+            <LinearLayout
+                android:id="@+id/layout_gas_bill"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@color/dark_grey_card"
+                android:layout_marginBottom="8dp"
+                android:padding="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Doğalgaz"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:gravity="start|center_vertical" />
+
+                <Button
+                    android:id="@+id/button_pay_gas"
+                    android:layout_width="60dp"
+                    android:layout_height="36dp"
+                    android:text="Öde"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/pay_button_background"
+                    android:layout_marginStart="8dp" />
+
+            </LinearLayout>
+
+            <!-- Elektrik Faturası -->
+            <LinearLayout
+                android:id="@+id/layout_electricity_bill"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@color/dark_grey_card"
+                android:layout_marginBottom="8dp"
+                android:padding="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Elektrik Faturası"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:gravity="start|center_vertical" />
+
+                <Button
+                    android:id="@+id/button_pay_electricity"
+                    android:layout_width="60dp"
+                    android:layout_height="36dp"
+                    android:text="Öde"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/pay_button_background"
+                    android:layout_marginStart="8dp" />
+
+            </LinearLayout>
+
+            <!-- Su Faturası -->
+            <LinearLayout
+                android:id="@+id/layout_water_bill"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@color/dark_grey_card"
+                android:layout_marginBottom="8dp"
+                android:padding="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Su Faturası"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:gravity="start|center_vertical" />
+
+                <Button
+                    android:id="@+id/button_pay_water"
+                    android:layout_width="60dp"
+                    android:layout_height="36dp"
+                    android:text="Öde"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/pay_button_background"
+                    android:layout_marginStart="8dp" />
+
+            </LinearLayout>
+
+            <!-- TV Faturası -->
+            <LinearLayout
+                android:id="@+id/layout_tv_bill"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@color/dark_grey_card"
+                android:layout_marginBottom="8dp"
+                android:padding="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TV Faturası"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:gravity="start|center_vertical" />
+
+                <Button
+                    android:id="@+id/button_pay_tv"
+                    android:layout_width="60dp"
+                    android:layout_height="36dp"
+                    android:text="Öde"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/pay_button_background"
+                    android:layout_marginStart="8dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView> 

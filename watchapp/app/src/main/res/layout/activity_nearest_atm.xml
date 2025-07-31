@@ -60,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="En Yakın ATM"
+            android:text="En Yakın Şube"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"
