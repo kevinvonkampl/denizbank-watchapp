@@ -72,22 +72,22 @@
                 <!-- Eksi Butonu -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/btn_minus"
-                    android:layout_width="48dp"
+                    android:layout_width="40dp"
                     android:layout_height="48dp"
-                    app:cardCornerRadius="24dp"
+                    app:cardCornerRadius="20dp"
                     app:cardBackgroundColor="@color/dark_grey_card"
                     app:cardElevation="4dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    android:layout_marginEnd="12dp">
+                    android:layout_marginEnd="8dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="-"
                         android:textColor="@color/white"
-                        android:textSize="24sp"
+                        android:textSize="20sp"
                         android:textStyle="bold"
                         android:gravity="center" />
 
@@ -97,12 +97,12 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
                     android:layout_height="60dp"
-                    android:layout_weight="1"
+                    android:layout_weight="8"
                     app:cardCornerRadius="12dp"
                     app:cardBackgroundColor="@color/dark_grey_card"
                     app:cardElevation="4dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="12dp">
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp">
 
                     <TextView
                         android:id="@+id/tv_amount"
@@ -110,7 +110,7 @@
                         android:layout_height="match_parent"
                         android:text="0.000,00 ₺"
                         android:textColor="@color/white"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         android:textStyle="bold"
                         android:gravity="center" />
 
@@ -119,22 +119,22 @@
                 <!-- Artı Butonu -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/btn_plus"
-                    android:layout_width="48dp"
+                    android:layout_width="40dp"
                     android:layout_height="48dp"
-                    app:cardCornerRadius="24dp"
+                    app:cardCornerRadius="20dp"
                     app:cardBackgroundColor="@color/dark_grey"
                     app:cardElevation="4dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    android:layout_marginStart="12dp">
+                    android:layout_marginStart="8dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="+"
                         android:textColor="@color/white"
-                        android:textSize="24sp"
+                        android:textSize="20sp"
                         android:textStyle="bold"
                         android:gravity="center" />
 

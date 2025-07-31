@@ -39,6 +39,11 @@ class WithdrawMoneyActivity : ComponentActivity() {
     }
     
     private fun setupClickListeners() {
+        // Back butonu
+        findViewById<TextView>(R.id.tv_back).setOnClickListener {
+            finish()
+        }
+        
         // Eksi butonu
         findViewById<CardView>(R.id.btn_minus).setOnClickListener {
             decreaseAmount()

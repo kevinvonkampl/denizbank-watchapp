@@ -1,75 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Wear OS için en dış layout bu olmalı -->
-<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    android:padding="15dp"
+    android:background="@color/dark_background"
+    android:fillViewport="true"
     tools:context=".presentation.NearestAtmActivity">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_boxedEdges="all">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
 
-        <!-- Başlık gibi sabit elemanlar için bir konteyner -->
+        <!-- Top Bar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="8dp">
 
-            <!-- Top Bar -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="8dp">
-                <TextView
-                    android:id="@+id/tv_back"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:padding="8dp"
-                    android:text="Back"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
-                <TextView
-                    android:id="@+id/tv_time"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:padding="8dp"
-                    android:text="10:18"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
+            <!-- Sol - Back -->
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/tv_back"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="En Yakın ATM"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="8dp"
+                android:text="Back"
                 android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:textSize="16sp" />
+
+            <!-- Boş Alan -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <!-- Saat -->
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="10:18"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
         </LinearLayout>
 
+        <!-- Başlık -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="En Yakın ATM"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"/>
 
-        <!-- Dinamik Liste (İçerik, başlığın altından başlayacak) -->
-        <androidx.wear.widget.WearableRecyclerView
+        <!-- ATM Listesi -->
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/atm_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="50dp"
+            android:layout_height="wrap_content"
             android:scrollbars="vertical"
             tools:listitem="@layout/item_atm" />
 
@@ -80,5 +81,7 @@
             android:layout_gravity="center"
             android:visibility="gone"
             tools:visibility="visible"/>
-    </FrameLayout>
-</androidx.wear.widget.BoxInsetLayout>
+
+    </LinearLayout>
+
+</ScrollView>

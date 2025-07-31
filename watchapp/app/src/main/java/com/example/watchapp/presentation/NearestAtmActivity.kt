@@ -8,12 +8,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.wear.widget.WearableLinearLayoutManager
-import androidx.wear.widget.WearableRecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.watchapp.R
 import com.example.watchapp.presentation.adapter.AtmAdapter
 import com.example.watchapp.presentation.ui.support.SupportViewModel
@@ -23,7 +22,7 @@ import java.util.*
 
 class NearestAtmActivity : ComponentActivity() {
     private val viewModel: SupportViewModel by viewModels()
-    private lateinit var atmRecyclerView: WearableRecyclerView
+    private lateinit var atmRecyclerView: RecyclerView
     private lateinit var atmAdapter: AtmAdapter
     private lateinit var loadingIndicator: ProgressBar
 
@@ -52,8 +51,7 @@ class NearestAtmActivity : ComponentActivity() {
         }
 
         atmRecyclerView.apply {
-            isEdgeItemsCenteringEnabled = true
-            layoutManager = WearableLinearLayoutManager(this@NearestAtmActivity)
+            layoutManager = LinearLayoutManager(this@NearestAtmActivity)
             adapter = atmAdapter
         }
     }
