@@ -64,5 +64,24 @@ Uygulama, aşağıdaki temel bankacılık fonksiyonlarını desteklemektedir:
 3.  Uygulamayı bir Wear OS emülatörü veya fiziksel bir akıllı saat üzerinde çalıştırın.
 
 ---
-**Geliştirici:** Duayenler Takımı
-**Bootcamp:** DenizBank İlerisi Gençlik
+### Ekip ve Katkıda Bulunanlar
+
+Bu proje, DenizBank İlerisi Gençlik Bootcamp'i kapsamında, her biri kendi alanında değerli katkılar sunan dinamik bir ekip tarafından hayata geçirilmiştir.
+
+*   **PM & System Architect (API & Services)**
+    *   **Arhan Konuk** - Projenin genel teknik vizyonunu ve yönetimini üstlenmiştir. Backend (Java, Spring Boot) ve frontend (Kotlin, Android) arasındaki tüm API katmanlarını tasarlamış, geliştirmiş ve sistemlerin uçtan uca entegrasyonunu sağlamıştır.
+
+*   **UI/UX & Kotlin Developer**
+    *   **Salih Karakuş** - Uygulamanın hem kullanıcı arayüzü (UI/UX) tasarım süreçlerine aktif olarak katkıda bulunmuş, hem de bu tasarımları Kotlin ve XML kullanarak çalışan, fonksiyonel bir saate dönüştürmüştür.
+
+*   **UI/UX Designer**
+    *   **Raziyenur Yanık** - Uygulamanın Figma üzerindeki görsel kimliğini ve temel kullanıcı deneyimi akışlarını tasarlamıştır. Sezgisel ve modern bir arayüz yaratarak projenin estetik vizyonunu belirlemiştir.
+
+*   **Business Analyst**
+    *   **Selin İnan** - Proje gereksinimlerinin analiz edilmesi, iş akışlarının tanımlanması ve teknik ekibin ihtiyaç duyduğu fonksiyonel şartnamelerin oluşturulmasında kilit rol oynamıştır.
+
+*   **Product and Marketing Strategist**
+    *   **Nurcan Ercan** - Projenin pazar analizini, hedef kitleye uygun özelliklerin belirlenmesini ve ürünün pazarlama stratejilerini yönetmiştir. Projenin iş hedeflerine ulaşmasını sağlamıştır.
+
+*   **Scrum Master & Team Coordinator**
+    *   **Yusuf Ali Mertyürek** - Ekip içi iletişimi ve senkronizasyonu güçlendirerek projenin çevik (agile) bir metodolojiyle ilerlemesini sağlamıştır. Proje boyunca pozitif bir çalışma ortamı yaratmış, takım ruhunu ve motivasyonu en üst düzeyde tutmuştur.
